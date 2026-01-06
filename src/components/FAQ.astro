@@ -1,0 +1,42 @@
+---
+import type { ContentData } from '../types';
+
+interface Props {
+  faq: ContentData['faq'];
+}
+
+const { faq } = Astro.props;
+
+function formatMarkdown(text: string): string {
+  if (text === 'TODO') {
+    return '<span class="text-ink/40 italic">Информация будет добавлена позже</span>';
+  }
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n\n/g, '</p><p class="mt-4">')
+    .replace(/\n/g, '<br>');
+}
+---
+
+<section id="faq" class="section bg-base">
+  <div class="container-custom">
+    <h2 class="heading-2 mb-10 text-center text-ink">
+      <span class="relative inline-block"><span class="absolute bottom-0 left-0 right-0 h-0.5 bg-ice/50 -z-10"></span>{faq.title}</span>
+    </h2>
+    <div class="max-w-3xl mx-auto space-y-6">
+      {faq.items.map((item) => (
+        <details class="card bg-base/80 group">
+          <summary class="cursor-pointer font-medium text-lg md:text-xl text-ink flex items-center justify-between">
+            <span>{item.question}</span>
+            <span class="text-ink/40 group-open:rotate-180 transition-transform ml-4">▼</span>
+          </summary>
+          <div 
+            class="mt-6 text-ink/70 leading-relaxed prose prose-sm max-w-none"
+            set:html={formatMarkdown(item.answer)}
+          />
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+

@@ -1,0 +1,38 @@
+---
+import type { ContentData } from '../types';
+
+interface Props {
+  navItems: ContentData['navigation']['items'];
+}
+
+const { navItems } = Astro.props;
+---
+
+<nav class="sticky top-0 z-50 bg-base/90 backdrop-blur-sm border-b border-nimbus/20">
+  <div class="container-custom">
+    <div class="flex items-center justify-between h-16">
+      <a href="#hero" class="text-lg font-medium text-ink hover:text-ink/80 transition-colors relative inline-block">
+        Ирина Спиридонова
+        <span class="absolute -bottom-1 left-0 right-0 h-1 bg-peach rounded-full opacity-60"></span>
+      </a>
+      <ul class="hidden md:flex items-center space-x-8 flex-1 justify-end">
+        {navItems.filter(item => item.label !== 'Подход').map((item) => (
+          <li>
+            <a 
+              href={item.anchor}
+              class="text-sm text-ink/70 hover:text-peach transition-colors"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <button class="md:hidden ml-auto text-ink/70" aria-label="Меню">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>
+

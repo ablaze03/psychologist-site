@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-base: #FBFAF7;
+  --color-nimbus: #D9D9D9;
+  --color-ink: #111827;
+  --color-lemon: #F5E8A6;
+  --color-ice: #D7E7F6;
+  --color-peach: #EAD5C6;
+  --color-aquaSoft: #C7D7C9;
+  --color-brand: #0E7C86;
+  --color-brand-hover: #0a656d;
+  --color-brand-light: rgba(14, 124, 134, 0.1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply text-ink antialiased;
+    background-color: var(--color-base);
+  }
+}
+
+@layer components {
+  .section {
+    @apply py-12 md:py-16;
+  }
+  
+  .container-custom {
+    max-width: min(1120px, 100%);
+    @apply mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .heading-1 {
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    @apply font-light tracking-tight;
+    line-height: 1.1;
+  }
+  
+  .heading-2 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-light tracking-tight;
+  }
+  
+  .heading-3 {
+    @apply text-2xl md:text-3xl font-light tracking-tight;
+  }
+  
+  .highlight-marker {
+    @apply relative inline-block px-1;
+  }
+  
+  .highlight-marker::before {
+    content: '';
+    @apply absolute inset-0 -z-10;
+    background: var(--color-lemon);
+    transform: skew(-2deg);
+    border-radius: 3px;
+    opacity: 0.7;
+  }
+  
+  
+  .divider {
+    @apply w-full h-auto;
+    fill: currentColor;
+  }
+  
+  .divider-top {
+    @apply -mt-px;
+  }
+  
+  .divider-bottom {
+    @apply -mb-px;
+  }
+  
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-8 py-4 rounded-xl font-medium transition-all;
+    background-color: var(--color-peach);
+    color: var(--color-ink);
+    border: 1px solid var(--color-nimbus);
+    font-size: 1rem;
+    line-height: 1.5rem;
+    @apply shadow-sm hover:shadow-md;
+  }
+  
+  .btn-primary:hover {
+    background-color: #E0C9B5;
+  }
+  
+  .btn-primary:focus {
+    @apply outline-none ring-2 ring-offset-2;
+    --tw-ring-color: var(--color-lemon);
+    --tw-ring-opacity: 0.4;
+  }
+  
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all;
+    background-color: transparent;
+    border: 2px solid var(--color-ink);
+    color: var(--color-ink);
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+  
+  .btn-secondary:hover {
+    background-color: var(--color-ice);
+    background-color: rgba(215, 231, 246, 0.1);
+  }
+  
+  .btn-secondary:focus {
+    @apply outline-none ring-2 ring-offset-2;
+    --tw-ring-color: var(--color-ink);
+    --tw-ring-opacity: 0.2;
+  }
+  
+  .card {
+    @apply bg-white rounded-2xl p-8 md:p-10 border border-nimbus/40;
+    @apply transition-all duration-300 hover:shadow-lg;
+  }
+  
+  .card:hover {
+    background-color: var(--color-aquaSoft);
+    background-color: rgba(199, 215, 201, 0.08);
+  }
+  
+  .card-service {
+    @apply bg-base rounded-2xl p-6 md:p-8;
+    border: 1px solid var(--color-aquaSoft);
+    @apply transition-all duration-300 hover:shadow-md;
+  }
+  
+  .card-service:hover {
+    background-color: rgba(199, 215, 201, 0.08);
+  }
+  
+  .chip {
+    @apply inline-flex items-center px-4 py-2 rounded-full text-sm font-medium;
+    @apply bg-lemon/40 text-ink border border-lemon/60;
+  }
+  
+  .link-accent {
+    @apply text-brand hover:text-brand-hover underline decoration-brand/40 underline-offset-2 transition-colors;
+  }
+}
+

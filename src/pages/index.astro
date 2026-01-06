@@ -1,0 +1,414 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import FAQ from '../components/FAQ.astro';
+import Divider from '../components/Divider.astro';
+import HighlightMarker from '../components/HighlightMarker.astro';
+import contentData from '../../content.json';
+import type { ContentData } from '../types';
+
+const content = contentData as ContentData;
+---
+
+<Layout content={content}>
+  <Navigation navItems={content.navigation.items} />
+  
+  <!-- Hero -->
+  <section id="hero" class="section min-h-[85vh] flex items-center bg-base relative overflow-hidden">
+    <!-- Мягкая подсветка за текстом -->
+    <div class="absolute left-0 top-[50%] w-96 h-96 bg-peach/20 rounded-full opacity-40 blur-3xl -z-0 hero-blob-left"></div>
+    <!-- Декоративный блоб за фото -->
+    <div class="absolute right-0 top-[50%] w-96 h-96 bg-ice/30 rounded-full opacity-30 blur-3xl -z-0 hero-blob-right"></div>
+    
+    <div class="container-custom relative z-10">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="order-2 md:order-1">
+          <h1 class="heading-1 mb-8 text-ink">
+            Психотерапия, в которой можно <HighlightMarker>выдохнуть</HighlightMarker>.
+          </h1>
+          <p class="hero-subtitle text-ink/80 mb-6 font-light">
+            Помогаю разобраться с тревогой, отношениями и самооценкой — <HighlightMarker>бережно</HighlightMarker>, <HighlightMarker>в вашем темпе</HighlightMarker>.<br />
+            <span class="hero-subtitle-small">Онлайн и очно.</span>
+          </p>
+          <p class="text-base md:text-lg text-ink/60 mb-10 leading-relaxed">
+            {content.hero.microText}
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href={content.hero.cta.primary.link} class="btn-primary">
+              {content.hero.cta.primary.text}
+            </a>
+            <a href={content.hero.cta.secondary.link} class="btn-secondary">
+              {content.hero.cta.secondary.text}
+            </a>
+          </div>
+        </div>
+        <div class="order-1 md:order-2 relative z-10">
+          <img 
+            src="/images/portrait.jpg"
+            alt="Спиридонова Ирина — клинический психолог"
+            class="hero-image w-full mx-auto rounded-2xl border border-nimbus/40 shadow-lg object-cover aspect-[3/4]"
+            loading="eager"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <style>
+    .hero-subtitle {
+      font-size: clamp(1.125rem, 1.4vw, 1.5rem);
+      line-height: 1.5;
+    }
+    
+    .hero-subtitle-small {
+      font-size: clamp(1rem, 1.2vw, 1.25rem);
+    }
+    
+    .hero-image {
+      max-width: min(28rem, 100%);
+    }
+    
+    @media (min-width: 1280px) {
+      .hero-image {
+        max-width: min(24rem, 100%);
+      }
+    }
+    
+    @media (min-width: 1440px) {
+      .hero-image {
+        max-width: 28rem;
+      }
+    }
+    
+    .hero-blob-left,
+    .hero-blob-right {
+      margin-top: -12rem;
+    }
+  </style>
+  
+  <Divider color="ice" position="bottom" />
+
+  <!-- Кому подходит -->
+  <section id="suitable-for" class="section bg-ice">
+    <div class="container-custom">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="heading-2 mb-6 text-ink">
+          <HighlightMarker>{content.suitableFor.title}</HighlightMarker>
+        </h2>
+        <ul class="space-y-4 mb-12 text-lg md:text-xl text-ink/80 leading-relaxed">
+          {content.suitableFor.items.map((item) => (
+            <li class="flex items-start">
+              <span class="text-ink/40 mr-3">•</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <div class="flex flex-wrap gap-3">
+          {content.suitableFor.chips.map((chip) => (
+            <span class="chip">{chip}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <Divider color="base" position="bottom" />
+
+  <!-- С чем работаю -->
+  <section id="services" class="section bg-base">
+    <div class="container-custom">
+      <div class="max-w-5xl mx-auto">
+        <h2 class="heading-2 mb-10 text-center text-ink">
+          <HighlightMarker>{content.services.title}</HighlightMarker>
+        </h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          {content.services.items.map((item) => (
+            <div class="card-service">
+              <h3 class="text-xl font-medium text-ink mb-2">{item.title}</h3>
+              <p class="text-ink/70 leading-relaxed">{item.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <Divider color="peach" position="bottom" />
+
+  <!-- Как проходит работа -->
+  <section id="process" class="section bg-peach">
+    <div class="container-custom">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="heading-2 mb-8 text-center text-ink">
+          <span class="relative inline-block"><span class="absolute bottom-0 left-0 right-0 h-0.5 bg-aquaSoft/50 -z-10"></span>{content.process.title}</span>
+        </h2>
+        <div class="space-y-6">
+          {content.process.steps.map((step) => (
+            <div class="flex gap-6 items-start">
+              <div class="flex-shrink-0 w-12 h-12 rounded-full bg-base/80 flex items-center justify-center text-ink font-light text-xl">
+                {step.number}
+              </div>
+              <div class="flex-1">
+                <h3 class="text-xl font-medium text-ink mb-2">{step.title}</h3>
+                <p class="text-ink/70 leading-relaxed">{step.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <Divider color="base" position="bottom" />
+
+  <!-- Подход -->
+  <section id="approach" class="section bg-base">
+    <div class="container-custom">
+      <div class="max-w-3xl mx-auto text-center">
+        <h2 class="heading-2 mb-6 text-ink">
+          {content.approach.title}
+        </h2>
+        <p class="text-lg md:text-xl text-ink/80 mb-8 leading-relaxed">
+          Я работаю <span class="relative inline-block px-1"><span class="absolute inset-0 bg-peach/30 -z-10 rounded-sm"></span>бережно</span> и структурно: мы смотрим, что с вами происходит, почему именно так, и как можно по-другому — в вашем темпе.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          {content.approach.bullets.map((bullet) => (
+            <span class="chip">{bullet}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <Divider color="aquaSoft" position="bottom" />
+
+  <!-- Обо мне -->
+  <section id="about" class="section bg-aquaSoft">
+    <div class="container-custom">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-start">
+          <!-- Фото слева -->
+          <div class="order-2 md:order-1">
+            <img 
+              src="images/about.jpg"
+              alt="Спиридонова Ирина — клинический психолог"
+              class="w-full rounded-2xl border border-nimbus/40 object-cover aspect-[3/4]"
+              loading="lazy"
+            />
+          </div>
+          
+          <!-- Карточка справа -->
+          <div class="order-1 md:order-2">
+            <div class="card bg-base/90">
+              <h2 class="heading-2 mb-4 text-ink relative inline-block pb-2">
+                <span class="relative inline-block"><span class="absolute bottom-0 left-0 w-16 h-0.5 bg-aquaSoft/60 -z-10"></span>{content.about.title}</span>
+              </h2>
+              
+              <div class="space-y-6 mb-8">
+                <p class="text-lg text-ink/80 leading-relaxed">
+                  Я дипломированный психолог с многолетним опытом. Работаю с теми, кто хочет разобраться в себе, найти эмоциональное равновесие и научиться осознанно управлять своей жизнью.
+                </p>
+                <p class="text-lg text-ink/80 leading-relaxed">
+                  Моя цель — помочь вам услышать себя и увидеть новые возможности для изменений.
+                </p>
+              </div>
+              
+              <div class="mb-8">
+                <h3 class="text-lg font-medium text-ink mb-4">Опыт:</h3>
+                <ul class="space-y-2 text-ink/80">
+                  <li class="flex items-start">
+                    <span class="text-peach mr-2 mt-1">✔</span>
+                    <span>8+ лет работы в психологическом консультировании</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-peach mr-2 mt-1">✔</span>
+                    <span>Специализированное образование</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-peach mr-2 mt-1">✔</span>
+                    <span>Работаю с разными запросами — от тревожности до поиска себя</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div class="space-y-3 pt-6 border-t border-nimbus/30">
+                {content.about.facts.map((fact) => (
+                  <div class="flex flex-col sm:flex-row sm:items-baseline gap-2 text-sm">
+                    <span class="text-ink/60 font-medium sm:w-48">{fact.label}:</span>
+                    <span class="text-ink/80">{fact.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Дипломы и сертификаты -->
+        <div class="mt-12">
+          <h3 class="heading-3 mb-6 text-center text-ink/80">
+            Дипломы и сертификаты
+          </h3>
+          <div class="overflow-x-auto pb-4 scrollbar-hide" style="scroll-snap-type: x mandatory;">
+            <div class="flex gap-4" style="scroll-snap-align: start;">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div 
+                  class="flex-shrink-0 w-48 aspect-[3/4] bg-base/60 rounded-xl border border-nimbus/40 flex items-center justify-center cursor-pointer transition-all hover:scale-[1.08] hover:shadow-lg certificate-item overflow-hidden"
+                  data-index={i}
+                  style="scroll-snap-align: start;"
+                >
+                  <img 
+                    src=""
+                    alt="Диплом или сертификат"
+                    class="hidden certificate-image w-full h-full object-cover"
+                    data-src=""
+                  />
+                  <span class="text-ink/30 text-xs certificate-placeholder">Скоро</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Lightbox Modal -->
+        <div id="lightbox" class="fixed inset-0 bg-ink/90 z-50 hidden items-center justify-center p-4">
+          <button id="lightbox-close" class="absolute top-4 right-4 text-base text-white hover:text-peach transition-colors" aria-label="Закрыть">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <img id="lightbox-image" src="" alt="Диплом или сертификат" class="max-w-full max-h-[90vh] rounded-lg object-contain" />
+        </div>
+        
+        <script>
+          document.addEventListener('DOMContentLoaded', () => {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightbox-image');
+            const lightboxClose = document.getElementById('lightbox-close');
+            const certificates = document.querySelectorAll('.certificate-item');
+            
+            certificates.forEach(cert => {
+              cert.addEventListener('click', () => {
+                const img = cert.querySelector('.certificate-image');
+                const imgSrc = img?.getAttribute('data-src') || img?.src || '';
+                if (imgSrc && imgSrc !== '') {
+                  lightboxImage.src = imgSrc;
+                  lightboxImage.alt = img?.alt || 'Диплом или сертификат';
+                  lightbox.classList.remove('hidden');
+                  lightbox.classList.add('flex');
+                  document.body.style.overflow = 'hidden';
+                }
+              });
+            });
+            
+            const closeLightbox = () => {
+              lightbox.classList.add('hidden');
+              lightbox.classList.remove('flex');
+              document.body.style.overflow = '';
+            };
+            
+            lightboxClose.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', (e) => {
+              if (e.target === lightbox) closeLightbox();
+            });
+            
+            document.addEventListener('keydown', (e) => {
+              if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+                closeLightbox();
+              }
+            });
+          });
+        </script>
+        
+        <style>
+          .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+        </style>
+      </div>
+    </div>
+  </section>
+  
+  <Divider color="base" position="bottom" />
+
+  <!-- Формат и стоимость -->
+  <section id="pricing" class="section bg-base">
+    <div class="container-custom">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="heading-2 mb-8 text-center text-ink">
+          <span class="relative inline-block"><span class="absolute bottom-0 left-0 right-0 h-0.5 bg-ice/50 -z-10"></span>{content.pricing.title}</span>
+        </h2>
+        <div class="card bg-ice/50 mb-6">
+          <ul class="space-y-3 text-ink/80">
+            {content.pricing.items.map((item) => (
+              <li class="flex items-start">
+                <span class="text-ink/40 mr-3">•</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <p class="text-center text-ink/60 text-sm">
+          {content.pricing.microText}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <FAQ faq={content.faq} />
+  
+  <Divider color="peach" position="bottom" />
+
+  <!-- Контакты -->
+  <section id="contacts" class="section bg-peach">
+    <div class="container-custom">
+      <div class="max-w-3xl mx-auto text-center">
+        <h2 class="heading-2 mb-6 text-ink">
+          <span class="relative inline-block"><span class="absolute bottom-0 left-0 right-0 h-0.5 bg-peach/50 -z-10"></span>{content.contacts.title}</span>
+        </h2>
+        <p class="text-lg text-ink/80 mb-12 leading-relaxed">
+          {content.contacts.description}
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          {content.contacts.buttons.map((button) => (
+            <a 
+              href={button.link}
+              class="btn-primary"
+              target={button.link.startsWith('http') ? '_blank' : undefined}
+            >
+              {button.text}
+            </a>
+          ))}
+        </div>
+        
+        <p class="text-sm text-ink/60">
+          {content.contacts.disclaimer}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-ink text-base/70 py-12">
+    <div class="container-custom">
+      <div class="max-w-3xl mx-auto space-y-6 text-sm">
+        <div>
+          <h3 class="text-base mb-3 font-medium">{content.disclaimer.title}</h3>
+          <p class="leading-relaxed whitespace-pre-line">{content.disclaimer.content}</p>
+        </div>
+        <div>
+          <h3 class="text-base mb-3 font-medium">{content.disclaimer.confidentiality.title}</h3>
+          <p class="leading-relaxed">{content.disclaimer.confidentiality.content}</p>
+        </div>
+        <div class="pt-6 border-t border-base/20 text-center">
+          <p>&copy; {new Date().getFullYear()} Спиридонова Ирина. Все права защищены.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+</Layout>

@@ -1,0 +1,31 @@
+---
+interface Props {
+  color: 'ice' | 'peach' | 'aquaSoft' | 'base';
+  position?: 'top' | 'bottom';
+}
+
+const { color, position = 'bottom' } = Astro.props;
+
+const colorMap = {
+  ice: '#D7E7F6',
+  peach: '#EAD5C6',
+  aquaSoft: '#C7D7C9',
+  base: '#FBFAF7',
+};
+
+const currentColor = colorMap[color];
+---
+
+<svg 
+  class={`divider divider-${position}`}
+  viewBox="0 0 1440 80" 
+  preserveAspectRatio="none"
+  aria-hidden="true"
+  style="display: block; width: 100%; height: auto;"
+>
+  <path 
+    d="M0,80 Q240,40 480,60 T960,50 T1440,60 L1440,80 L0,80 Z" 
+    fill={currentColor}
+  />
+</svg>
+

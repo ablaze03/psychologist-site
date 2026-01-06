@@ -1,0 +1,38 @@
+---
+import '../styles/global.css';
+import type { ContentData } from '../types';
+
+interface Props {
+  content: ContentData;
+}
+
+const { content } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- SEO Meta -->
+    <title>{content.meta.title}</title>
+    <meta name="description" content={content.meta.description} />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content={content.meta.ogTitle} />
+    <meta property="og:description" content={content.meta.ogDescription} />
+    <meta property="og:type" content="website" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={content.meta.ogTitle} />
+    <meta name="twitter:description" content={content.meta.ogDescription} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
