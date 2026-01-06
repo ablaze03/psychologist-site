@@ -28,6 +28,7 @@ export interface ContentData {
   };
   services: {
     title: string;
+    audience: string;
     items: Array<{
       title: string;
       description: string;
@@ -44,6 +45,7 @@ export interface ContentData {
   approach: {
     title: string;
     description: string;
+    method: string;
     bullets: string[];
   };
   about: {
@@ -69,6 +71,8 @@ export interface ContentData {
   contacts: {
     title: string;
     description: string;
+    responseTime: string;
+    messageTemplate: string;
     buttons: Array<{
       text: string;
       link: string;

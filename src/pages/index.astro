@@ -118,9 +118,10 @@ const content = contentData as ContentData;
   <section id="services" class="section bg-base">
     <div class="container-custom">
       <div class="max-w-5xl mx-auto">
-        <h2 class="heading-2 mb-10 text-center text-ink">
+        <h2 class="heading-2 mb-6 text-center text-ink">
           <HighlightMarker>{content.services.title}</HighlightMarker>
         </h2>
+        <p class="text-center text-ink/70 mb-8">{content.services.audience}</p>
         <div class="grid md:grid-cols-2 gap-6">
           {content.services.items.map((item) => (
             <div class="card-service">
@@ -168,9 +169,10 @@ const content = contentData as ContentData;
         <h2 class="heading-2 mb-6 text-ink">
           {content.approach.title}
         </h2>
-        <p class="text-lg md:text-xl text-ink/80 mb-8 leading-relaxed">
+        <p class="text-lg md:text-xl text-ink/80 mb-4 leading-relaxed">
           Я работаю <span class="relative inline-block px-1"><span class="absolute inset-0 bg-peach/30 -z-10 rounded-sm"></span>бережно</span> и структурно: мы смотрим, что с вами происходит, почему именно так, и как можно по-другому — в вашем темпе.
         </p>
+        <p class="text-base text-ink/70 mb-8">{content.approach.method}</p>
         <div class="flex flex-wrap justify-center gap-4">
           {content.approach.bullets.map((bullet) => (
             <span class="chip">{bullet}</span>
@@ -370,9 +372,11 @@ const content = contentData as ContentData;
         <h2 class="heading-2 mb-6 text-ink">
           <span class="relative inline-block"><span class="absolute bottom-0 left-0 right-0 h-0.5 bg-peach/50 -z-10"></span>{content.contacts.title}</span>
         </h2>
-        <p class="text-lg text-ink/80 mb-12 leading-relaxed">
+        <p class="text-lg text-ink/80 mb-4 leading-relaxed">
           {content.contacts.description}
         </p>
+        <p class="text-base text-ink/70 mb-2">{content.contacts.responseTime}</p>
+        <p class="text-sm text-ink/60 mb-12">{content.contacts.messageTemplate}</p>
         
         <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           {content.contacts.buttons.map((button) => (
