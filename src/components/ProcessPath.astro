@@ -14,211 +14,126 @@ const content = contentData as ContentData;
 const telegramMessage = "Добрый день! Меня зовут [Имя]. Хочу записаться на онлайн встречу-знакомство (30 мин). Удобные интервалы (по Москве): … Тема запроса (по желанию): …";
 const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURIComponent(telegramMessage)}`;
 
-// Определяем позиции для карточек (слева/справа)
-const positions = ['left', 'right', 'left', 'right', 'left', 'right'];
+// Позиции шагов вдоль змейки (x, y в процентах от viewBox, и позиция текста: 'top' или 'bottom')
+const stepPositions = [
+  { x: 10, y: 15, textPos: 'top' },    // 01 - левый верх
+  { x: 35, y: 12, textPos: 'top' },    // 02 - ближе к центру верх
+  { x: 60, y: 20, textPos: 'bottom' }, // 03 - правый верх
+  { x: 80, y: 70, textPos: 'top' },    // 04 - правый низ
+  { x: 55, y: 75, textPos: 'bottom' }, // 05 - центр низ
+  { x: 25, y: 80, textPos: 'top' },    // 06 - левый низ
+];
 ---
 
-<section id="process" class="section bg-peach relative overflow-hidden">
+<section id="process" class="section bg-white">
   <div class="container-custom">
     <div class="max-w-6xl mx-auto">
       <h2 class="heading-2 mb-4 text-center text-ink">
         {process.title}
       </h2>
       
-      <p class="text-lg text-ink/80 mb-16 leading-relaxed text-center max-w-2xl mx-auto">
-        От первого 'хочу изменений' — к опоре и новым привычкам. <HighlightMarker>Шаг за шагом</HighlightMarker>, в вашем темпе.
+      <p class="text-base text-ink/70 mb-12 leading-relaxed text-center max-w-2xl mx-auto">
+        {process.subtitle}
       </p>
       
-      <!-- Desktop: Вертикальная секция с извилистой линией в центре -->
-      <div class="hidden md:block relative">
-        <div class="grid grid-cols-12 gap-8 relative" style="min-height: 1200px;">
-          <!-- Извилистая линия-маршрут в центре (колонка 6) -->
-          <div class="col-span-12 absolute inset-0 flex justify-center" style="height: 100%;">
-            <svg class="w-full h-full max-w-md" viewBox="0 0 200 1200" preserveAspectRatio="none" style="pointer-events: none;">
-              <!-- Мягкая извилистая линия -->
-              <path 
-                d="M 100 50 Q 120 200 100 350 Q 80 500 100 650 Q 120 800 100 950 Q 80 1100 100 1150" 
-                fill="none" 
-                stroke="rgba(199, 215, 201, 0.5)" 
-                stroke-width="3"
-                stroke-linecap="round"
-                class="process-path"
-              />
-            </svg>
-          </div>
+      <!-- Desktop: горизонтальная змейка -->
+      <div class="hidden md:block relative" style="height: 340px;">
+        <!-- SVG змейка -->
+        <svg class="w-full h-full" viewBox="0 0 1000 340" preserveAspectRatio="none" style="overflow: visible;">
+          <!-- Путь змейки (2-3 витка) -->
+          <path 
+            d="M 50 50 Q 200 30 350 50 Q 500 70 650 50 Q 800 30 950 50 Q 900 150 750 170 Q 600 190 450 170 Q 300 150 150 170 Q 100 250 200 270 Q 400 290 600 270 Q 800 250 900 270" 
+            fill="none" 
+            stroke="#111827" 
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="process-snake-path"
+          />
           
-          <!-- Чекпоинты и карточки -->
-          {process.steps.map((step, index) => {
-            const position = positions[index];
-            // Позиции по вертикали (равномерно распределены)
-            const yPositions = [50, 250, 450, 650, 850, 1050];
-            const yPercent = (yPositions[index] / 1200) * 100;
-            
-            return (
-              <div 
-                class={`col-span-12 grid grid-cols-12 gap-8 process-checkpoint process-checkpoint-${index + 1}`}
-                style={`position: absolute; top: ${yPercent}%; left: 0; right: 0; transform: translateY(-50%);`}
-              >
-                {position === 'left' ? (
-                  <>
-                    <!-- Карточка слева (колонки 1-5) -->
-                    <div class="col-span-5 col-start-1 process-card" style="opacity: 0; transform: translateX(-20px);">
-                      <div class="bg-base/95 rounded-xl p-6 border border-nimbus/30 shadow-md hover:shadow-lg transition-shadow">
-                        <h3 class="text-lg font-medium text-ink mb-2">
-                          {step.title.includes('встреча-знакомство') ? (
-                            <>
-                              {step.title.split('встреча-знакомство')[0]}
-                              <HighlightMarker>встреча-знакомство</HighlightMarker>
-                              {step.title.split('встреча-знакомство')[1]}
-                            </>
-                          ) : step.title.includes('по желанию') ? (
-                            <>
-                              {step.title.split('по желанию')[0]}
-                              <HighlightMarker>по желанию</HighlightMarker>
-                              {step.title.split('по желанию')[1]}
-                            </>
-                          ) : step.title.includes('Опора') ? (
-                            <>
-                              <HighlightMarker>Опора</HighlightMarker>
-                              {step.title.split('Опора')[1]}
-                            </>
-                          ) : (
-                            step.title
-                          )}
-                        </h3>
-                        <p class="text-sm text-ink/70 leading-relaxed mb-3">
-                          {step.description}
-                        </p>
-                        {index === 1 && (
-                          <a 
-                            href={telegramLinkWithMessage}
-                            class="btn-primary text-sm px-4 py-2 inline-block"
-                            target="_blank"
-                          >
-                            Записаться в Telegram
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                    <!-- Узел в центре (колонка 6) -->
-                    <div class="col-span-2 col-start-6 flex items-center justify-center">
-                      <div class="w-12 h-12 rounded-full bg-aquaSoft border-2 border-base shadow-lg flex items-center justify-center z-10 relative" style="border-width: 3px;">
-                        <span class="text-sm text-ink font-medium">{step.number}</span>
-                      </div>
-                    </div>
-                    <!-- Пустое место справа (колонки 7-12) -->
-                    <div class="col-span-5"></div>
-                  </>
-                ) : (
-                  <>
-                    <!-- Пустое место слева (колонки 1-6) -->
-                    <div class="col-span-6"></div>
-                    <!-- Узел в центре (колонка 7) -->
-                    <div class="col-span-2 col-start-7 flex items-center justify-center">
-                      <div class="w-12 h-12 rounded-full bg-aquaSoft border-2 border-base shadow-lg flex items-center justify-center z-10 relative" style="border-width: 3px;">
-                        <span class="text-sm text-ink font-medium">{step.number}</span>
-                      </div>
-                    </div>
-                    <!-- Карточка справа (колонки 8-12) -->
-                    <div class="col-span-5 col-start-8 process-card" style="opacity: 0; transform: translateX(20px);">
-                      <div class="bg-base/95 rounded-xl p-6 border border-nimbus/30 shadow-md hover:shadow-lg transition-shadow">
-                        <h3 class="text-lg font-medium text-ink mb-2">
-                          {step.title.includes('встреча-знакомство') ? (
-                            <>
-                              {step.title.split('встреча-знакомство')[0]}
-                              <HighlightMarker>встреча-знакомство</HighlightMarker>
-                              {step.title.split('встреча-знакомство')[1]}
-                            </>
-                          ) : step.title.includes('по желанию') ? (
-                            <>
-                              {step.title.split('по желанию')[0]}
-                              <HighlightMarker>по желанию</HighlightMarker>
-                              {step.title.split('по желанию')[1]}
-                            </>
-                          ) : step.title.includes('Опора') ? (
-                            <>
-                              <HighlightMarker>Опора</HighlightMarker>
-                              {step.title.split('Опора')[1]}
-                            </>
-                          ) : (
-                            step.title
-                          )}
-                        </h3>
-                        <p class="text-sm text-ink/70 leading-relaxed mb-3">
-                          {step.description}
-                        </p>
-                        {index === 1 && (
-                          <a 
-                            href={telegramLinkWithMessage}
-                            class="btn-primary text-sm px-4 py-2 inline-block"
-                            target="_blank"
-                          >
-                            Записаться в Telegram
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      
-      <!-- Mobile: вертикальная версия -->
-      <div class="md:hidden space-y-8">
+          <!-- Маленькие круглые маркеры-узлы (2-3 штуки) -->
+          <circle cx="350" cy="50" r="6" fill="#111827" />
+          <circle cx="600" cy="170" r="6" fill="#111827" />
+          <circle cx="400" cy="270" r="6" fill="#111827" />
+        </svg>
+        
+        <!-- Шаги вдоль змейки -->
         {process.steps.map((step, index) => {
+          const pos = stepPositions[index];
+          const isStep2 = index === 1;
+          
           return (
-            <div class="flex gap-4 items-start relative pl-8">
-              <!-- Вертикальная линия -->
-              {index < process.steps.length - 1 && (
-                <div class="absolute left-3 top-8 bottom-0 w-px bg-aquaSoft/40"></div>
-              )}
-              
-              <!-- Узел -->
-              <div class="relative z-10 flex-shrink-0">
-                <div class="w-8 h-8 rounded-full bg-aquaSoft border-2 border-base shadow-md flex items-center justify-center" style="border-width: 3px;">
-                  <span class="text-xs text-ink font-medium">{step.number}</span>
-                </div>
+            <div 
+              class="absolute process-step"
+              style={`left: ${pos.x}%; top: ${pos.y}%; transform: translate(-50%, ${pos.textPos === 'top' ? '-100%' : '0'});`}
+            >
+              <!-- Номер в кружке на линии -->
+              <div class="w-8 h-8 rounded-full border-2 border-ink flex items-center justify-center bg-white mb-2 mx-auto">
+                <span class="text-xs font-medium text-ink">{step.number}</span>
               </div>
               
-              <!-- Карточка -->
-              <div class="flex-1 bg-base/95 rounded-xl p-5 border border-nimbus/30 shadow-md">
-                <h3 class="text-lg font-medium text-ink mb-2">
-                  {step.title.includes('встреча-знакомство') ? (
+              <!-- Текст шага -->
+              <div class={`${pos.textPos === 'top' ? 'mb-2' : 'mt-2'} text-left`} style="min-width: 160px;">
+                <h3 class="text-sm font-semibold text-ink mb-1">
+                  {step.title}
+                </h3>
+                <p class="text-xs text-ink/70 leading-relaxed">
+                  {isStep2 ? (
                     <>
-                      {step.title.split('встреча-знакомство')[0]}
-                      <HighlightMarker>встреча-знакомство</HighlightMarker>
-                      {step.title.split('встреча-знакомство')[1]}
-                    </>
-                  ) : step.title.includes('по желанию') ? (
-                    <>
-                      {step.title.split('по желанию')[0]}
-                      <HighlightMarker>по желанию</HighlightMarker>
-                      {step.title.split('по желанию')[1]}
-                    </>
-                  ) : step.title.includes('Опора') ? (
-                    <>
-                      <HighlightMarker>Опора</HighlightMarker>
-                      {step.title.split('Опора')[1]}
+                      Пишете в{' '}
+                      <a 
+                        href={telegramLinkWithMessage}
+                        class="text-ink underline hover:text-ink/70"
+                        target="_blank"
+                      >
+                        Telegram
+                      </a>
+                      {' '}— выбираем время.
                     </>
                   ) : (
-                    step.title
+                    step.description
                   )}
-                </h3>
-                <p class="text-sm text-ink/70 leading-relaxed mb-3">
-                  {step.description}
                 </p>
-                {index === 1 && (
-                  <a 
-                    href={telegramLinkWithMessage}
-                    class="btn-primary text-sm px-4 py-2 inline-block"
-                    target="_blank"
-                  >
-                    Записаться в Telegram
-                  </a>
-                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      
+      <!-- Mobile: простой вертикальный список -->
+      <div class="md:hidden space-y-6">
+        {process.steps.map((step, index) => {
+          const isStep2 = index === 1;
+          
+          return (
+            <div class="flex gap-4 items-start">
+              <!-- Номер -->
+              <div class="w-8 h-8 rounded-full border-2 border-ink flex items-center justify-center bg-white flex-shrink-0">
+                <span class="text-xs font-medium text-ink">{step.number}</span>
+              </div>
+              
+              <!-- Текст -->
+              <div class="flex-1">
+                <h3 class="text-sm font-semibold text-ink mb-1">
+                  {step.title}
+                </h3>
+                <p class="text-xs text-ink/70 leading-relaxed">
+                  {isStep2 ? (
+                    <>
+                      Пишете в{' '}
+                      <a 
+                        href={telegramLinkWithMessage}
+                        class="text-ink underline hover:text-ink/70"
+                        target="_blank"
+                      >
+                        Telegram
+                      </a>
+                      {' '}— выбираем время.
+                    </>
+                  ) : (
+                    step.description
+                  )}
+                </p>
               </div>
             </div>
           );
@@ -229,43 +144,33 @@ const positions = ['left', 'right', 'left', 'right', 'left', 'right'];
   
   <style>
     @media (min-width: 768px) {
-      .process-checkpoint {
-        animation: fadeInUp 0.6s ease-out forwards;
+      .process-snake-path {
+        animation: drawSnake 2s ease-out forwards;
+        stroke-dasharray: 3000;
+        stroke-dashoffset: 3000;
       }
       
-      .process-checkpoint-1 { animation-delay: 0.1s; }
-      .process-checkpoint-2 { animation-delay: 0.2s; }
-      .process-checkpoint-3 { animation-delay: 0.3s; }
-      .process-checkpoint-4 { animation-delay: 0.4s; }
-      .process-checkpoint-5 { animation-delay: 0.5s; }
-      .process-checkpoint-6 { animation-delay: 0.6s; }
-      
-      .process-card {
-        animation: fadeInCard 0.6s ease-out forwards;
-      }
-      
-      @keyframes fadeInUp {
-        to {
-          opacity: 1;
-        }
-      }
-      
-      @keyframes fadeInCard {
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
-      
-      .process-path {
-        animation: drawPath 1.5s ease-out forwards;
-        stroke-dasharray: 2000;
-        stroke-dashoffset: 2000;
-      }
-      
-      @keyframes drawPath {
+      @keyframes drawSnake {
         to {
           stroke-dashoffset: 0;
+        }
+      }
+      
+      .process-step {
+        animation: fadeInStep 0.6s ease-out forwards;
+        opacity: 0;
+      }
+      
+      .process-step:nth-child(1) { animation-delay: 0.2s; }
+      .process-step:nth-child(2) { animation-delay: 0.4s; }
+      .process-step:nth-child(3) { animation-delay: 0.6s; }
+      .process-step:nth-child(4) { animation-delay: 0.8s; }
+      .process-step:nth-child(5) { animation-delay: 1s; }
+      .process-step:nth-child(6) { animation-delay: 1.2s; }
+      
+      @keyframes fadeInStep {
+        to {
+          opacity: 1;
         }
       }
     }
