@@ -75,12 +75,15 @@ export interface ContentData {
   contacts: {
     title: string;
     description: string;
-    responseTime: string;
-    messageTemplate: string;
-    buttons: Array<{
+    subtitle: string;
+    phone: string;
+    phoneLink: string;
+    channel: {
       text: string;
       link: string;
-    }>;
+    };
+    messageTemplate: string;
+    telegramLink: string;
     disclaimer: string;
   };
   disclaimer: {
