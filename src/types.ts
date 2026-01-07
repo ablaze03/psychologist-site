@@ -44,8 +44,7 @@ export interface ContentData {
   };
   approach: {
     title: string;
-    lead: string;
-    methodNote: string;
+    subtitle?: string;
     principles: Array<{
       number: string;
       title: string;
