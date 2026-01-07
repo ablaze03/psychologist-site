@@ -1,5 +1,4 @@
 ---
-import HighlightMarker from './HighlightMarker.astro';
 import type { ContentData } from '../types';
 import contentData from '../../content.json';
 
@@ -10,18 +9,23 @@ interface Props {
 const { process } = Astro.props;
 const content = contentData as ContentData;
 
+// Акцентный цвет sage
+const sageColor = '#A8CBB7';
+
 // Создаём ссылку на Telegram с prefilled текстом
 const telegramMessage = "Добрый день! Меня зовут [Имя]. Хочу записаться на онлайн встречу-знакомство (30 мин). Удобные интервалы (по Москве): … Тема запроса (по желанию): …";
 const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURIComponent(telegramMessage)}`;
 
-// Позиции шагов вдоль змейки (x, y в процентах от viewBox, и позиция текста: 'top' или 'bottom')
+// Позиции шагов вдоль змейки (x, y в процентах от viewBox 1000x260, и позиция текста: 'top' или 'bottom')
+// 01-03 на верхней линии (слева направо), 04-06 на нижней (04-05 слева направо, 06 справа - финал)
+// Координаты соответствуют точкам на линии: (100,50), (350,50), (600,50), (750,130), (550,150), (850,150)
 const stepPositions = [
-  { x: 10, y: 15, textPos: 'top' },    // 01 - левый верх
-  { x: 35, y: 12, textPos: 'top' },    // 02 - ближе к центру верх
-  { x: 60, y: 20, textPos: 'bottom' }, // 03 - правый верх
-  { x: 80, y: 70, textPos: 'top' },    // 04 - правый низ
-  { x: 55, y: 75, textPos: 'bottom' }, // 05 - центр низ
-  { x: 25, y: 80, textPos: 'top' },    // 06 - левый низ
+  { x: 10, y: 19, textPos: 'top' },    // 01 - верхняя линия, левый край (100, 50)
+  { x: 35, y: 19, textPos: 'top' },    // 02 - верхняя линия, ближе к центру (350, 50)
+  { x: 60, y: 19, textPos: 'top' },    // 03 - верхняя линия, правая часть (600, 50)
+  { x: 75, y: 50, textPos: 'bottom' }, // 04 - нижняя линия, справа (750, 130)
+  { x: 55, y: 58, textPos: 'bottom' }, // 05 - нижняя линия, центр (550, 150)
+  { x: 85, y: 58, textPos: 'bottom' }, // 06 - нижняя линия, правый край (850, 150) - финал
 ];
 ---
 
@@ -37,63 +41,85 @@ const stepPositions = [
       </p>
       
       <!-- Desktop: горизонтальная змейка -->
-      <div class="hidden md:block relative" style="height: 340px;">
+      <div class="hidden md:block relative" style="height: 260px;">
         <!-- SVG змейка -->
-        <svg class="w-full h-full" viewBox="0 0 1000 340" preserveAspectRatio="none" style="overflow: visible;">
-          <!-- Путь змейки (2-3 витка) -->
+        <svg class="w-full h-full" viewBox="0 0 1000 260" preserveAspectRatio="none" style="overflow: visible;">
+          <!-- Путь змейки (плавные кривые, не уходящие глубоко вниз, финал справа) -->
           <path 
-            d="M 50 50 Q 200 30 350 50 Q 500 70 650 50 Q 800 30 950 50 Q 900 150 750 170 Q 600 190 450 170 Q 300 150 150 170 Q 100 250 200 270 Q 400 290 600 270 Q 800 250 900 270" 
+            d="M 50 50 Q 200 45 350 50 Q 500 55 650 50 Q 800 45 950 50 Q 920 120 750 130 Q 600 140 450 130 Q 300 120 150 130 Q 100 150 250 150 Q 400 155 550 150 Q 700 145 850 150" 
             fill="none" 
             stroke="#111827" 
-            stroke-width="4"
+            stroke-width="5"
             stroke-linecap="round"
             stroke-linejoin="round"
             class="process-snake-path"
           />
           
-          <!-- Маленькие круглые маркеры-узлы (2-3 штуки) -->
-          <circle cx="350" cy="50" r="6" fill="#111827" />
-          <circle cx="600" cy="170" r="6" fill="#111827" />
-          <circle cx="400" cy="270" r="6" fill="#111827" />
+          <!-- Точки-маркеры на линии (акцентным цветом) - 6 штук, строго в местах шагов -->
+          <circle cx="100" cy="50" r="6" fill={sageColor} />
+          <circle cx="350" cy="50" r="6" fill={sageColor} />
+          <circle cx="600" cy="50" r="6" fill={sageColor} />
+          <circle cx="750" cy="130" r="6" fill={sageColor} />
+          <circle cx="550" cy="150" r="6" fill={sageColor} />
+          <circle cx="850" cy="150" r="6" fill={sageColor} />
+          
+          <!-- Флажок финиша (рядом с последней точкой справа) -->
+          <g transform="translate(850, 150)">
+            <path 
+              d="M 0 0 L 0 -18 L 12 -12 L 0 -8 Z" 
+              fill="none" 
+              stroke={sageColor} 
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </g>
         </svg>
         
         <!-- Шаги вдоль змейки -->
         {process.steps.map((step, index) => {
           const pos = stepPositions[index];
           const isStep2 = index === 1;
+          const isStep6 = index === 5;
           
           return (
             <div 
               class="absolute process-step"
               style={`left: ${pos.x}%; top: ${pos.y}%; transform: translate(-50%, ${pos.textPos === 'top' ? '-100%' : '0'});`}
             >
-              <!-- Номер в кружке на линии -->
-              <div class="w-8 h-8 rounded-full border-2 border-ink flex items-center justify-center bg-white mb-2 mx-auto">
-                <span class="text-xs font-medium text-ink">{step.number}</span>
-              </div>
-              
-              <!-- Текст шага -->
-              <div class={`${pos.textPos === 'top' ? 'mb-2' : 'mt-2'} text-left`} style="min-width: 160px;">
-                <h3 class="text-sm font-semibold text-ink mb-1">
-                  {step.title}
-                </h3>
-                <p class="text-xs text-ink/70 leading-relaxed">
-                  {isStep2 ? (
-                    <>
-                      Пишете в{' '}
-                      <a 
-                        href={telegramLinkWithMessage}
-                        class="text-ink underline hover:text-ink/70"
-                        target="_blank"
-                      >
-                        Telegram
-                      </a>
-                      {' '}— выбираем время.
-                    </>
-                  ) : (
-                    step.description
-                  )}
-                </p>
+              <div class="flex items-start gap-3">
+                <!-- Номер в кружке (слева от текста) -->
+                <div 
+                  class="w-11 h-11 rounded-full border-2 flex items-center justify-center bg-white flex-shrink-0"
+                  style={`border-color: ${sageColor};`}
+                >
+                  <span class="text-xs font-medium text-ink">{step.number}</span>
+                </div>
+                
+                <!-- Текст шага -->
+                <div class="flex-1" style="min-width: 150px;">
+                  <h3 class="text-sm font-semibold text-ink mb-1">
+                    {step.title}
+                  </h3>
+                  <p class="text-xs text-ink/70 leading-relaxed">
+                    {isStep2 ? (
+                      <>
+                        Пишете в{' '}
+                        <a 
+                          href={telegramLinkWithMessage}
+                          class="underline hover:opacity-70 transition-opacity"
+                          style={`color: ${sageColor};`}
+                          target="_blank"
+                        >
+                          Telegram
+                        </a>
+                        {' '}— выбираем время.
+                      </>
+                    ) : (
+                      step.description
+                    )}
+                  </p>
+                </div>
               </div>
             </div>
           );
@@ -108,7 +134,10 @@ const stepPositions = [
           return (
             <div class="flex gap-4 items-start">
               <!-- Номер -->
-              <div class="w-8 h-8 rounded-full border-2 border-ink flex items-center justify-center bg-white flex-shrink-0">
+              <div 
+                class="w-11 h-11 rounded-full border-2 flex items-center justify-center bg-white flex-shrink-0"
+                style={`border-color: ${sageColor};`}
+              >
                 <span class="text-xs font-medium text-ink">{step.number}</span>
               </div>
               
@@ -123,7 +152,8 @@ const stepPositions = [
                       Пишете в{' '}
                       <a 
                         href={telegramLinkWithMessage}
-                        class="text-ink underline hover:text-ink/70"
+                        class="underline hover:opacity-70 transition-opacity"
+                        style={`color: ${sageColor};`}
                         target="_blank"
                       >
                         Telegram
