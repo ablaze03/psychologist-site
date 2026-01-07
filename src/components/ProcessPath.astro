@@ -1,4 +1,5 @@
 ---
+import TherapySnake from './TherapySnake.astro';
 import type { ContentData } from '../types';
 import contentData from '../../content.json';
 
@@ -9,151 +10,46 @@ interface Props {
 const { process } = Astro.props;
 const content = contentData as ContentData;
 
-// Акцентный цвет sage
-const sageColor = '#A8CBB7';
-
 // Создаём ссылку на Telegram с prefilled текстом
 const telegramMessage = "Добрый день! Меня зовут [Имя]. Хочу записаться на онлайн встречу-знакомство (30 мин). Удобные интервалы (по Москве): … Тема запроса (по желанию): …";
 const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURIComponent(telegramMessage)}`;
 
-// Позиции шагов вдоль змейки (x, y в процентах от viewBox 1000x260, и позиция текста: 'top' или 'bottom')
-// 01-03 на верхней линии (слева направо), 04-06 на нижней (04-05 слева направо, 06 справа - финал)
-// Координаты соответствуют точкам на линии: (100,50), (350,50), (600,50), (750,130), (550,150), (850,150)
-const stepPositions = [
-  { x: 10, y: 19, textPos: 'top' },    // 01 - верхняя линия, левый край (100, 50)
-  { x: 35, y: 19, textPos: 'top' },    // 02 - верхняя линия, ближе к центру (350, 50)
-  { x: 60, y: 19, textPos: 'top' },    // 03 - верхняя линия, правая часть (600, 50)
-  { x: 75, y: 50, textPos: 'bottom' }, // 04 - нижняя линия, справа (750, 130)
-  { x: 55, y: 58, textPos: 'bottom' }, // 05 - нижняя линия, центр (550, 150)
-  { x: 85, y: 58, textPos: 'bottom' }, // 06 - нижняя линия, правый край (850, 150) - финал
+// Позиции шагов (x, y в процентах от контейнера, side: 'top' или 'bottom')
+// Тексты согласно ТЗ
+const steps = [
+  { n: "01", title: "Осознание", text: "Хочу по-другому.", x: 12, y: 22, side: "top" },
+  { n: "02", title: "Запись", text: "Пишете в Telegram — выбираем время.", x: 33, y: 20, side: "top" },
+  { n: "03", title: "Встреча-знакомство (30 мин)", text: "Уточняем запрос и формат.", x: 56, y: 25, side: "top" },
+  { n: "04", title: "Регулярные сессии", text: "1–2 раза в неделю, 50–60 минут.", x: 76, y: 55, side: "bottom" },
+  { n: "05", title: "Между встречами (по желанию)", text: "Небольшие практики и наблюдения.", x: 55, y: 78, side: "bottom" },
+  { n: "06", title: "Опора и изменения", text: "Новые способы реагировать и больше ясности.", x: 84, y: 66, side: "bottom" },
 ];
 ---
 
-<section id="process" class="section bg-white">
+<section id="process" class="process">
   <div class="container-custom">
-    <div class="max-w-6xl mx-auto">
-      <h2 class="heading-2 mb-4 text-center text-ink">
-        {process.title}
-      </h2>
-      
-      <p class="text-base text-ink/70 mb-12 leading-relaxed text-center max-w-2xl mx-auto">
-        {process.subtitle}
-      </p>
-      
-      <!-- Desktop: горизонтальная змейка -->
-      <div class="hidden md:block relative" style="height: 260px;">
-        <!-- SVG змейка -->
-        <svg class="w-full h-full" viewBox="0 0 1000 260" preserveAspectRatio="none" style="overflow: visible;">
-          <!-- Путь змейки (плавные кривые, не уходящие глубоко вниз, финал справа) -->
-          <path 
-            d="M 50 50 Q 200 45 350 50 Q 500 55 650 50 Q 800 45 950 50 Q 920 120 750 130 Q 600 140 450 130 Q 300 120 150 130 Q 100 150 250 150 Q 400 155 550 150 Q 700 145 850 150" 
-            fill="none" 
-            stroke="#111827" 
-            stroke-width="5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="process-snake-path"
-          />
-          
-          <!-- Точки-маркеры на линии (акцентным цветом) - 6 штук, строго в местах шагов -->
-          <circle cx="100" cy="50" r="6" fill={sageColor} />
-          <circle cx="350" cy="50" r="6" fill={sageColor} />
-          <circle cx="600" cy="50" r="6" fill={sageColor} />
-          <circle cx="750" cy="130" r="6" fill={sageColor} />
-          <circle cx="550" cy="150" r="6" fill={sageColor} />
-          <circle cx="850" cy="150" r="6" fill={sageColor} />
-          
-          <!-- Флажок финиша (рядом с последней точкой справа) -->
-          <g transform="translate(850, 150)">
-            <path 
-              d="M 0 0 L 0 -18 L 12 -12 L 0 -8 Z" 
-              fill="none" 
-              stroke={sageColor} 
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </g>
-        </svg>
-        
-        <!-- Шаги вдоль змейки -->
-        {process.steps.map((step, index) => {
-          const pos = stepPositions[index];
-          const isStep2 = index === 1;
-          const isStep6 = index === 5;
-          
+    <div class="processHead">
+      <h2 class="processTitle">{process.title}</h2>
+      <p class="processSubtitle">{process.subtitle}</p>
+    </div>
+
+    <div class="snakeWrap" aria-hidden="false">
+      <TherapySnake />
+      <div class="stepsLayer">
+        {steps.map((s) => {
+          const isStep2 = s.n === "02";
           return (
-            <div 
-              class="absolute process-step"
-              style={`left: ${pos.x}%; top: ${pos.y}%; transform: translate(-50%, ${pos.textPos === 'top' ? '-100%' : '0'});`}
-            >
-              <div class="flex items-start gap-3">
-                <!-- Номер в кружке (слева от текста) -->
-                <div 
-                  class="w-11 h-11 rounded-full border-2 flex items-center justify-center bg-white flex-shrink-0"
-                  style={`border-color: ${sageColor};`}
-                >
-                  <span class="text-xs font-medium text-ink">{step.number}</span>
-                </div>
-                
-                <!-- Текст шага -->
-                <div class="flex-1" style="min-width: 150px;">
-                  <h3 class="text-sm font-semibold text-ink mb-1">
-                    {step.title}
-                  </h3>
-                  <p class="text-xs text-ink/70 leading-relaxed">
-                    {isStep2 ? (
-                      <>
-                        Пишете в{' '}
-                        <a 
-                          href={telegramLinkWithMessage}
-                          class="underline hover:opacity-70 transition-opacity"
-                          style={`color: ${sageColor};`}
-                          target="_blank"
-                        >
-                          Telegram
-                        </a>
-                        {' '}— выбираем время.
-                      </>
-                    ) : (
-                      step.description
-                    )}
-                  </p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      
-      <!-- Mobile: простой вертикальный список -->
-      <div class="md:hidden space-y-6">
-        {process.steps.map((step, index) => {
-          const isStep2 = index === 1;
-          
-          return (
-            <div class="flex gap-4 items-start">
-              <!-- Номер -->
-              <div 
-                class="w-11 h-11 rounded-full border-2 flex items-center justify-center bg-white flex-shrink-0"
-                style={`border-color: ${sageColor};`}
-              >
-                <span class="text-xs font-medium text-ink">{step.number}</span>
-              </div>
-              
-              <!-- Текст -->
-              <div class="flex-1">
-                <h3 class="text-sm font-semibold text-ink mb-1">
-                  {step.title}
-                </h3>
-                <p class="text-xs text-ink/70 leading-relaxed">
+            <div class={`step ${s.side}`} style={`left:${s.x}%; top:${s.y}%;`}>
+              <div class="badge">{s.n}</div>
+              <div class="copy">
+                <div class="t">{s.title}</div>
+                <div class="d">
                   {isStep2 ? (
                     <>
                       Пишете в{' '}
                       <a 
                         href={telegramLinkWithMessage}
-                        class="underline hover:opacity-70 transition-opacity"
-                        style={`color: ${sageColor};`}
+                        class="telegram-link"
                         target="_blank"
                       >
                         Telegram
@@ -161,47 +57,200 @@ const stepPositions = [
                       {' '}— выбираем время.
                     </>
                   ) : (
-                    step.description
+                    s.text
                   )}
-                </p>
+                </div>
               </div>
             </div>
           );
         })}
       </div>
     </div>
+
+    <!-- мобайл-версия (без змейки) -->
+    <div class="stepsMobile">
+      {steps.map((s) => {
+        const isStep2 = s.n === "02";
+        return (
+          <div class="mStep">
+            <div class="badge">{s.n}</div>
+            <div>
+              <div class="t">{s.title}</div>
+              <div class="d">
+                {isStep2 ? (
+                  <>
+                    Пишете в{' '}
+                    <a 
+                      href={telegramLinkWithMessage}
+                      class="telegram-link"
+                      target="_blank"
+                    >
+                      Telegram
+                    </a>
+                    {' '}— выбираем время.
+                  </>
+                ) : (
+                  s.text
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   </div>
   
   <style>
-    @media (min-width: 768px) {
-      .process-snake-path {
-        animation: drawSnake 2s ease-out forwards;
-        stroke-dasharray: 3000;
-        stroke-dashoffset: 3000;
+    .process { 
+      padding: 64px 0; 
+      background-color: white;
+    }
+    
+    .processHead { 
+      text-align: center; 
+      margin-bottom: 28px; 
+    }
+    
+    .processTitle { 
+      margin: 0; 
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--color-ink);
+    }
+    
+    .processSubtitle { 
+      margin: 10px 0 0; 
+      font-size: 1rem;
+      color: rgba(17, 24, 39, 0.7);
+    }
+
+    .snakeWrap {
+      position: relative;
+      max-width: 1200px;
+      margin: 28px auto 0;
+    }
+
+    .stepsLayer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .step {
+      position: absolute;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      max-width: 280px;
+      transform: translate(-10%, -20%);
+      pointer-events: auto;
+    }
+    
+    .step.bottom { 
+      transform: translate(-10%, 10%); 
+    }
+
+    .badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 2px solid var(--color-aquaSoft);
+      color: var(--color-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.9);
+      flex-shrink: 0;
+    }
+
+    .step .copy {
+      flex: 1;
+    }
+
+    .step .t { 
+      font-weight: 600; 
+      margin-top: 2px; 
+      font-size: 0.875rem;
+      color: var(--color-ink);
+      line-height: 1.4;
+    }
+    
+    .step .d { 
+      opacity: 0.75; 
+      margin-top: 6px; 
+      line-height: 1.35; 
+      font-size: 0.75rem;
+      color: var(--color-ink);
+    }
+    
+    .telegram-link {
+      color: var(--color-aquaSoft);
+      text-decoration: underline;
+      text-decoration-color: var(--color-aquaSoft);
+      text-underline-offset: 2px;
+      transition: opacity 0.2s;
+    }
+    
+    .telegram-link:hover {
+      opacity: 0.7;
+    }
+
+    .stepsMobile { 
+      display: none; 
+      max-width: 720px; 
+      margin: 24px auto 0; 
+    }
+    
+    .mStep { 
+      display: flex; 
+      gap: 12px; 
+      padding: 14px 0; 
+      border-top: 1px solid rgba(15, 23, 42, 0.08); 
+    }
+    
+    .mStep:first-child { 
+      border-top: 0; 
+    }
+    
+    .mStep .badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 2px solid var(--color-aquaSoft);
+      color: var(--color-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.75rem;
+      background: white;
+      flex-shrink: 0;
+    }
+    
+    .mStep .t {
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--color-ink);
+      margin-bottom: 4px;
+    }
+    
+    .mStep .d {
+      opacity: 0.75;
+      font-size: 0.75rem;
+      color: var(--color-ink);
+      line-height: 1.4;
+    }
+
+    @media (max-width: 900px) {
+      .snakeWrap { 
+        display: none; 
       }
-      
-      @keyframes drawSnake {
-        to {
-          stroke-dashoffset: 0;
-        }
-      }
-      
-      .process-step {
-        animation: fadeInStep 0.6s ease-out forwards;
-        opacity: 0;
-      }
-      
-      .process-step:nth-child(1) { animation-delay: 0.2s; }
-      .process-step:nth-child(2) { animation-delay: 0.4s; }
-      .process-step:nth-child(3) { animation-delay: 0.6s; }
-      .process-step:nth-child(4) { animation-delay: 0.8s; }
-      .process-step:nth-child(5) { animation-delay: 1s; }
-      .process-step:nth-child(6) { animation-delay: 1.2s; }
-      
-      @keyframes fadeInStep {
-        to {
-          opacity: 1;
-        }
+      .stepsMobile { 
+        display: block; 
       }
     }
   </style>

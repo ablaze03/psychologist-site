@@ -1,0 +1,76 @@
+---
+// Используем зелёный цвет из палитры сайта (aquaSoft)
+const stroke = "#C7D7C9"; // aquaSoft - зелёный цвет сайта
+const dot = "rgba(199, 215, 201, 0.6)"; // aquaSoft с прозрачностью для точек
+---
+
+<svg viewBox="0 0 1400 420" xmlns="http://www.w3.org/2000/svg" class="snakeSvg" aria-label="Путь терапии">
+  <defs>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="10" refY="7" orient="auto">
+      <path d="M0,0 L14,7 L0,14 Z" fill={stroke} />
+    </marker>
+    <filter id="softShadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="1" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- линия -->
+  <path
+    d="
+      M 130 190
+      C 260 170, 360 170, 480 185
+      S 720 210, 900 195
+      S 1140 175, 1250 190
+
+      C 1290 195, 1305 205, 1310 220
+      C 1318 245, 1300 280, 1250 305
+
+      C 1120 365, 930 330, 820 305
+      S 520 250, 330 275
+
+      C 260 285, 230 300, 230 320
+      C 230 350, 300 360, 380 350
+
+      C 520 332, 720 320, 980 330
+      C 1085 334, 1160 330, 1215 320
+    "
+    fill="none"
+    stroke={stroke}
+    stroke-width="6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    marker-end="url(#arrow)"
+    class="snakePath"
+    filter="url(#softShadow)"
+  />
+
+  <!-- точки на линии (мелкие) - 6 штук для шагов -->
+  <g fill={dot} stroke={dot}>
+    <circle cx="210" cy="188" r="7"/>
+    <circle cx="520" cy="190" r="7"/>
+    <circle cx="780" cy="198" r="7"/>
+    <circle cx="980" cy="325" r="7"/>
+    <circle cx="680" cy="310" r="7"/>
+    <circle cx="920" cy="330" r="7"/>
+  </g>
+</svg>
+
+<style>
+  .snakeSvg { 
+    width: 100%; 
+    height: auto; 
+    display: block; 
+  }
+  .snakePath { 
+    opacity: 0.95; 
+  }
+</style>
+
