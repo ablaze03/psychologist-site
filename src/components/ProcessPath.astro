@@ -1,0 +1,207 @@
+---
+import HighlightMarker from './HighlightMarker.astro';
+import type { ContentData } from '../types';
+
+interface Props {
+  process: ContentData['process'];
+}
+
+const { process } = Astro.props;
+
+// Определяем позиции для зигзага (слева/справа)
+const positions = ['left', 'right', 'left', 'right', 'left', 'right'];
+---
+
+<section id="process" class="section bg-peach relative overflow-hidden">
+  <div class="container-custom">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="heading-2 mb-4 text-center text-ink">
+        {process.title}
+      </h2>
+      
+      <p class="text-lg text-ink/80 mb-12 leading-relaxed text-center max-w-2xl mx-auto">
+        От первого 'хочу изменений' — к опоре и новым привычкам. Шаг за шагом, <HighlightMarker>в вашем темпе</HighlightMarker>.
+      </p>
+      
+      <!-- Desktop: S-образная тропинка -->
+      <div class="hidden md:block relative py-12" style="min-height: 600px;">
+        <!-- SVG путь - S-образная тропинка -->
+        <div class="absolute inset-0" style="height: 600px;">
+          <svg class="w-full h-full" viewBox="0 0 1000 600" preserveAspectRatio="none" style="pointer-events: none; overflow: visible;">
+            <path 
+              d="M 50 80 Q 200 120 350 100 Q 500 80 650 120 Q 800 160 950 140" 
+              fill="none" 
+              stroke="rgba(199, 215, 201, 0.5)" 
+              stroke-width="2.5"
+              class="process-path"
+            />
+          </svg>
+        </div>
+        
+        <!-- Чекпоинты и карточки -->
+        <div class="relative">
+          {process.steps.map((step, index) => {
+            const position = positions[index];
+            // Позиции вдоль S-образной кривой (в процентах от viewBox 1000x600)
+            const xPositions = [50, 200, 350, 500, 650, 950];
+            const yPositions = [80, 100, 120, 100, 120, 140];
+            const x = xPositions[index];
+            const y = yPositions[index];
+            
+            return (
+              <div 
+                class={`absolute process-checkpoint process-checkpoint-${index + 1}`}
+                style={`left: ${(x / 1000) * 100}%; top: ${(y / 600) * 100}%; transform: translate(-50%, -50%);`}
+              >
+                <!-- Точка на линии -->
+                <div class="relative z-10">
+                  <div class="w-4 h-4 rounded-full bg-aquaSoft border-2 border-base shadow-sm mx-auto mb-4"></div>
+                  <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs text-ink/50 font-light">
+                    {step.number}
+                  </span>
+                </div>
+                
+                <!-- Карточка -->
+                <div 
+                  class={`absolute ${position === 'left' ? 'right-full mr-8' : 'left-full ml-8'} top-1/2 -translate-y-1/2 w-64 process-card`}
+                  style="opacity: 0; transform: translateY(20px);"
+                >
+                  <div class="bg-base/95 rounded-xl p-5 border border-nimbus/30 shadow-sm hover:shadow-md transition-shadow">
+                    <h3 class="text-lg font-medium text-ink mb-2">
+                      {step.title.includes('встреча-знакомство') ? (
+                        <>
+                          {step.title.split('встреча-знакомство')[0]}
+                          <HighlightMarker>встреча-знакомство</HighlightMarker>
+                          {step.title.split('встреча-знакомство')[1]}
+                        </>
+                      ) : step.title.includes('по желанию') ? (
+                        <>
+                          {step.title.split('по желанию')[0]}
+                          <HighlightMarker>по желанию</HighlightMarker>
+                          {step.title.split('по желанию')[1]}
+                        </>
+                      ) : step.title.includes('Опора') ? (
+                        <>
+                          <HighlightMarker>Опора</HighlightMarker>
+                          {step.title.split('Опора')[1]}
+                        </>
+                      ) : (
+                        step.title
+                      )}
+                    </h3>
+                    <p class="text-sm text-ink/70 leading-relaxed">
+                      {step.description}
+                      {index === 1 && (
+                        <span class="block mt-2">
+                          <a href="#contacts" class="text-xs text-ink/60 hover:text-peach underline decoration-peach/50">
+                            Записаться
+                          </a>
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      
+      <!-- Mobile: вертикальная версия -->
+      <div class="md:hidden space-y-8">
+        {process.steps.map((step, index) => {
+          return (
+            <div class="flex gap-4 items-start relative pl-8">
+              <!-- Вертикальная линия -->
+              {index < process.steps.length - 1 && (
+                <div class="absolute left-3 top-8 bottom-0 w-px bg-aquaSoft/40"></div>
+              )}
+              
+              <!-- Точка -->
+              <div class="relative z-10 flex-shrink-0">
+                <div class="w-6 h-6 rounded-full bg-aquaSoft border-2 border-base shadow-sm flex items-center justify-center">
+                  <span class="text-xs text-ink/50 font-light">{step.number}</span>
+                </div>
+              </div>
+              
+              <!-- Карточка -->
+              <div class="flex-1 bg-base/90 rounded-xl p-4 border border-nimbus/30 shadow-sm">
+                <h3 class="text-lg font-medium text-ink mb-2">
+                  {step.title.includes('встреча-знакомство') ? (
+                    <>
+                      {step.title.split('встреча-знакомство')[0]}
+                      <HighlightMarker>встреча-знакомство</HighlightMarker>
+                      {step.title.split('встреча-знакомство')[1]}
+                    </>
+                  ) : step.title.includes('по желанию') ? (
+                    <>
+                      {step.title.split('по желанию')[0]}
+                      <HighlightMarker>по желанию</HighlightMarker>
+                      {step.title.split('по желанию')[1]}
+                    </>
+                  ) : step.title.includes('Опора') ? (
+                    <>
+                      <HighlightMarker>Опора</HighlightMarker>
+                      {step.title.split('Опора')[1]}
+                    </>
+                  ) : (
+                    step.title
+                  )}
+                </h3>
+                <p class="text-sm text-ink/70 leading-relaxed">
+                  {step.description}
+                  {index === 1 && (
+                    <span class="block mt-2">
+                      <a href="#contacts" class="text-xs text-ink/60 hover:text-peach underline decoration-peach/50">
+                        Записаться
+                      </a>
+                    </span>
+                  )}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+  
+  <style>
+    @media (min-width: 768px) {
+      .process-checkpoint {
+        animation: fadeInUp 0.6s ease-out forwards;
+      }
+      
+      .process-checkpoint-1 { animation-delay: 0.1s; }
+      .process-checkpoint-2 { animation-delay: 0.2s; }
+      .process-checkpoint-3 { animation-delay: 0.3s; }
+      .process-checkpoint-4 { animation-delay: 0.4s; }
+      .process-checkpoint-5 { animation-delay: 0.5s; }
+      .process-checkpoint-6 { animation-delay: 0.6s; }
+      
+      .process-card {
+        animation: fadeInUp 0.6s ease-out forwards;
+      }
+      
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      .process-path {
+        animation: drawPath 1.2s ease-out forwards;
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+      }
+      
+      @keyframes drawPath {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+    }
+  </style>
+</section>
+

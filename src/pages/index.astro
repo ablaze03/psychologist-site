@@ -4,6 +4,7 @@ import Navigation from '../components/Navigation.astro';
 import FAQ from '../components/FAQ.astro';
 import Divider from '../components/Divider.astro';
 import HighlightMarker from '../components/HighlightMarker.astro';
+import ProcessPath from '../components/ProcessPath.astro';
 import contentData from '../../content.json';
 import type { ContentData } from '../types';
 
@@ -139,29 +140,8 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
   
   <Divider color="peach" position="bottom" />
 
-  <!-- Как проходит работа -->
-  <section id="process" class="section bg-peach">
-    <div class="container-custom">
-      <div class="max-w-4xl mx-auto">
-        <h2 class="heading-2 mb-8 text-center text-ink">
-          <span class="relative inline-block"><span class="absolute bottom-0 left-0 right-0 h-0.5 bg-aquaSoft/50 -z-10"></span>{content.process.title}</span>
-        </h2>
-        <div class="space-y-6">
-          {content.process.steps.map((step) => (
-            <div class="flex gap-6 items-start">
-              <div class="flex-shrink-0 w-12 h-12 rounded-full bg-base/80 flex items-center justify-center text-ink font-light text-xl">
-                {step.number}
-              </div>
-              <div class="flex-1">
-                <h3 class="text-xl font-medium text-ink mb-2">{step.title}</h3>
-                <p class="text-ink/70 leading-relaxed">{step.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- Путь терапии -->
+  <ProcessPath process={content.process} />
   
   <Divider color="base" position="bottom" />
 

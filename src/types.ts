@@ -36,8 +36,9 @@ export interface ContentData {
   };
   process: {
     title: string;
+    subtitle?: string;
     steps: Array<{
-      number: number;
+      number: string;
       title: string;
       description: string;
     }>;
