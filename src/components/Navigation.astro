@@ -11,37 +11,67 @@ const content = contentData as ContentData;
 
 // Создаём ссылку на Telegram с prefilled текстом
 const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURIComponent(content.contacts.messageTemplate)}`;
+
+// Основные пункты меню (всегда видимые)
+const mainMenuItems = navItems.filter(item => 
+  ['Кому подходит', 'С чем работаю', 'Как проходит', 'Стоимость', 'Контакты'].includes(item.label)
+);
+
+// Пункты для dropdown "Ещё"
+const dropdownItems = navItems.filter(item => 
+  ['Обо мне', 'FAQ'].includes(item.label)
+);
 ---
 
 <nav class="sticky top-0 z-50 bg-base/90 backdrop-blur-sm border-b border-nimbus/20">
   <div class="container-custom">
     <div class="flex items-center justify-between h-16">
-      <a href="#hero" class="text-lg font-medium text-ink hover:text-ink/80 transition-colors relative inline-block">
+      <a href="#hero" class="text-lg font-medium text-ink hover:text-ink/80 transition-colors relative inline-block flex-shrink-0">
         Ирина Спиридонова
         <span class="absolute -bottom-1 left-0 right-0 h-1 bg-peach rounded-full opacity-60"></span>
       </a>
-      <ul class="hidden md:flex items-center space-x-8 flex-1 justify-end">
-        {navItems.filter(item => item.label !== 'Подход' && item.label !== 'Обо мне').map((item) => (
-          <li>
+      <ul class="hidden lg:flex items-center space-x-6 flex-1 justify-end min-w-0">
+        {mainMenuItems.map((item) => (
+          <li class="flex-shrink-0">
             <a 
               href={item.anchor}
-              class="text-sm text-ink/70 hover:text-peach transition-colors"
+              class="text-sm text-ink/70 hover:text-peach transition-colors whitespace-nowrap"
             >
               {item.label}
             </a>
           </li>
         ))}
-        <li>
+        <li class="relative group flex-shrink-0">
+          <button class="text-sm text-ink/70 hover:text-peach transition-colors whitespace-nowrap flex items-center gap-1">
+            Ещё
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul class="absolute right-0 top-full mt-2 bg-base border border-nimbus/30 rounded-lg shadow-lg py-2 min-w-[140px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            {dropdownItems.map((item) => (
+              <li>
+                <a 
+                  href={item.anchor}
+                  class="block px-4 py-2 text-sm text-ink/70 hover:text-peach hover:bg-peach/10 transition-colors"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </li>
+        <li class="flex-shrink-0">
           <a 
             href={telegramLinkWithMessage}
-            class="btn-primary text-sm px-4 py-2"
+            class="btn-primary text-sm px-4 py-2 whitespace-nowrap"
             target="_blank"
           >
             Записаться
           </a>
         </li>
       </ul>
-      <button class="md:hidden ml-auto text-ink/70" aria-label="Меню">
+      <button class="lg:hidden ml-auto text-ink/70" aria-label="Меню">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
