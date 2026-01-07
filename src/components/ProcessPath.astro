@@ -14,15 +14,16 @@ const content = contentData as ContentData;
 const telegramMessage = "Добрый день! Меня зовут [Имя]. Хочу записаться на онлайн встречу-знакомство (30 мин). Удобные интервалы (по Москве): … Тема запроса (по желанию): …";
 const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURIComponent(telegramMessage)}`;
 
-// Позиции шагов (x, y в процентах от контейнера, side: 'top' или 'bottom')
+// Позиции шагов для горизонтальной таймлайн-линии
+// x в процентах от контейнера, side: 'top' или 'bottom' (сверху или снизу от линии)
 // Тексты согласно ТЗ
 const steps = [
-  { n: "01", title: "Осознание", text: "Хочу по-другому.", x: 12, y: 22, side: "top" },
-  { n: "02", title: "Запись", text: "Пишете в Telegram — выбираем время.", x: 33, y: 20, side: "top" },
-  { n: "03", title: "Встреча-знакомство (30 мин)", text: "Уточняем запрос и формат.", x: 56, y: 25, side: "top" },
-  { n: "04", title: "Регулярные сессии", text: "1–2 раза в неделю, 50–60 минут.", x: 76, y: 55, side: "bottom" },
-  { n: "05", title: "Между встречами (по желанию)", text: "Небольшие практики и наблюдения.", x: 55, y: 78, side: "bottom" },
-  { n: "06", title: "Опора и изменения", text: "Новые способы реагировать и больше ясности.", x: 84, y: 66, side: "bottom" },
+  { n: "01", title: "Осознание", text: "Хочу по-другому.", x: 12, side: "top" },
+  { n: "02", title: "Запись", text: "Пишете в Telegram — выбираем время.", x: 33, side: "top" },
+  { n: "03", title: "Встреча-знакомство (30 мин)", text: "Уточняем запрос и формат.", x: 56, side: "top" },
+  { n: "04", title: "Регулярные сессии", text: "1–2 раза в неделю, 50–60 минут.", x: 76, side: "bottom" },
+  { n: "05", title: "Между встречами (по желанию)", text: "Небольшие практики и наблюдения.", x: 55, side: "bottom" },
+  { n: "06", title: "Опора и изменения", text: "Новые способы реагировать и больше ясности.", x: 84, side: "bottom" },
 ];
 ---
 
@@ -39,7 +40,7 @@ const steps = [
         {steps.map((s) => {
           const isStep2 = s.n === "02";
           return (
-            <div class={`step ${s.side}`} style={`left:${s.x}%; top:${s.y}%;`}>
+            <div class={`step ${s.side}`} style={`left:${s.x}%;`}>
               <div class="badge">{s.n}</div>
               <div class="copy">
                 <div class="t">{s.title}</div>
@@ -130,6 +131,7 @@ const steps = [
       position: relative;
       max-width: 1200px;
       margin: 28px auto 0;
+      min-height: 420px;
     }
 
     .stepsLayer {
@@ -144,12 +146,17 @@ const steps = [
       gap: 12px;
       align-items: flex-start;
       max-width: 280px;
-      transform: translate(-10%, -20%);
       pointer-events: auto;
     }
     
+    .step.top { 
+      top: 0;
+      transform: translate(-10%, 0);
+    }
+    
     .step.bottom { 
-      transform: translate(-10%, 10%); 
+      bottom: 0;
+      transform: translate(-10%, 0);
     }
 
     .badge {
