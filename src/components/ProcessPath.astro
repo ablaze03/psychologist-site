@@ -1,5 +1,4 @@
 ---
-import TherapySnake from './TherapySnake.astro';
 import type { ContentData } from '../types';
 import contentData from '../../content.json';
 
@@ -11,253 +10,261 @@ const { process } = Astro.props;
 const content = contentData as ContentData;
 
 // Создаём ссылку на Telegram с prefilled текстом
-const telegramMessage = "Добрый день! Меня зовут [Имя]. Хочу записаться на онлайн встречу-знакомство (30 мин). Удобные интервалы (по Москве): … Тема запроса (по желанию): …";
+const telegramMessage = content.contacts.messageTemplate;
 const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURIComponent(telegramMessage)}`;
 
-// Позиции шагов для горизонтальной таймлайн-линии
-// x в процентах от контейнера, side: 'top' или 'bottom' (сверху или снизу от линии)
-// Тексты согласно ТЗ
-const steps = [
-  { n: "01", title: "Осознание", text: "Хочу по-другому.", x: 12, side: "top" },
-  { n: "02", title: "Запись", text: "Пишете в Telegram — выбираем время.", x: 33, side: "top" },
-  { n: "03", title: "Встреча-знакомство (30 мин)", text: "Уточняем запрос и формат.", x: 56, side: "top" },
-  { n: "04", title: "Регулярные сессии", text: "1–2 раза в неделю, 50–60 минут.", x: 76, side: "bottom" },
-  { n: "05", title: "Между встречами (по желанию)", text: "Небольшие практики и наблюдения.", x: 55, side: "bottom" },
-  { n: "06", title: "Опора и изменения", text: "Новые способы реагировать и больше ясности.", x: 84, side: "bottom" },
-];
+// 5 шагов: чередуем top/bottom (1-top, 2-bottom, 3-top, 4-bottom, 5-top)
+const steps = process.steps.map((step, i) => ({
+  ...step,
+  side: i % 2 === 0 ? 'top' : 'bottom'
+}));
 ---
 
-<section id="process" class="process">
+<section id="process" class="therapy-timeline">
   <div class="container-custom">
-    <div class="processHead">
-      <h2 class="processTitle">{process.title}</h2>
-      <p class="processSubtitle">{process.subtitle}</p>
+    <div class="timeline-header">
+      <h2 class="timeline-title">{process.title}</h2>
+      <p class="timeline-subtitle">{process.subtitle}</p>
     </div>
 
-    <div class="snakeWrap" aria-hidden="false">
-      <TherapySnake />
-      <div class="stepsLayer">
-        {steps.map((s) => {
-          const isStep2 = s.n === "02";
-          return (
-            <div class={`step ${s.side}`} style={`left:${s.x}%;`}>
-              <div class="badge">{s.n}</div>
-              <div class="copy">
-                <div class="t">{s.title}</div>
-                <div class="d">
-                  {isStep2 ? (
-                    <>
-                      Пишете в{' '}
-                      <a 
-                        href={telegramLinkWithMessage}
-                        class="telegram-link"
-                        target="_blank"
-                      >
-                        Telegram
-                      </a>
-                      {' '}— выбираем время.
-                    </>
-                  ) : (
-                    s.text
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-
-    <!-- мобайл-версия (без змейки) -->
-    <div class="stepsMobile">
-      {steps.map((s) => {
-        const isStep2 = s.n === "02";
-        return (
-          <div class="mStep">
-            <div class="badge">{s.n}</div>
-            <div>
-              <div class="t">{s.title}</div>
-              <div class="d">
-                {isStep2 ? (
-                  <>
-                    Пишете в{' '}
-                    <a 
-                      href={telegramLinkWithMessage}
-                      class="telegram-link"
-                      target="_blank"
-                    >
-                      Telegram
-                    </a>
-                    {' '}— выбираем время.
-                  </>
-                ) : (
-                  s.text
-                )}
+    <!-- Grid-структура: кружки на линии + тексты сверху/снизу -->
+    <div class="timeline-grid">
+      <!-- Ряд 1: Верхние тексты (1, 3, 5) -->
+      <div class="texts-row texts-top">
+        {steps.map((step) => step.side === 'top' ? (
+          <div class="text-cell">
+            <div class="step-text">
+              <div class="step-title" set:html={step.title.replace(/\n/g, '<br />')}></div>
+              <div class="step-desc">
+                {step.description}
               </div>
             </div>
           </div>
-        );
-      })}
+        ) : (
+          <div class="text-cell text-empty"></div>
+        ))}
+      </div>
+
+      <!-- Ряд 2: Линия и большие кружки с цифрами -->
+      <div class="timeline-row">
+        <div class="timeline-line"></div>
+        {steps.map((step) => (
+          <div class="timeline-badge">{step.number}</div>
+        ))}
+      </div>
+
+      <!-- Ряд 3: Нижние тексты (2, 4) -->
+      <div class="texts-row texts-bottom">
+        {steps.map((step) => step.side === 'bottom' ? (
+          <div class="text-cell">
+            <div class="step-text">
+              <div class="step-title" set:html={step.title.replace(/\n/g, '<br />')}></div>
+              <div class="step-desc">
+                {step.description}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div class="text-cell text-empty"></div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Мобильная версия -->
+    <div class="timeline-mobile">
+      {steps.map((step) => (
+        <div class="mobile-step">
+          <div class="timeline-badge">{step.number}</div>
+          <div>
+            <div class="step-title" set:html={step.title.replace(/\n/g, '<br />')}></div>
+            <div class="step-desc">
+              {step.description}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   </div>
   
   <style>
-    .process { 
-      padding: 64px 0; 
+    .therapy-timeline {
+      padding: 64px 0;
       background-color: white;
     }
     
-    .processHead { 
-      text-align: center; 
-      margin-bottom: 28px; 
+    .timeline-header {
+      text-align: center;
+      margin-bottom: 48px;
     }
     
-    .processTitle { 
-      margin: 0; 
-      font-size: clamp(2.5rem, 4vw, 4rem);
+    .timeline-title {
+      margin: 0;
+      font-size: clamp(2rem, 3vw, 3rem);
       font-weight: 300;
       letter-spacing: -0.02em;
       line-height: 1.1;
       color: var(--color-ink);
     }
     
-    .processSubtitle { 
-      margin: 10px 0 0; 
+    .timeline-subtitle {
+      margin: 12px 0 0;
       font-size: 1rem;
       color: rgba(17, 24, 39, 0.7);
     }
 
-    .snakeWrap {
-      position: relative;
+    /* Grid-структура: 5 колонок */
+    .timeline-grid {
       max-width: 1200px;
-      margin: 28px auto 0;
-      min-height: 420px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      position: relative;
     }
 
-    .stepsLayer {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
+    /* Ряды с текстами */
+    .texts-row {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
     }
 
-    .step {
-      position: absolute;
+    .texts-top {
+      margin-bottom: 20px;
+    }
+
+    .texts-bottom {
+      margin-top: 20px;
+    }
+
+    /* Ячейка текста */
+    .text-cell {
       display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      max-width: 280px;
-      pointer-events: auto;
-    }
-    
-    .step.top { 
-      top: 0;
-      transform: translate(-10%, 0);
-    }
-    
-    .step.bottom { 
-      bottom: 0;
-      transform: translate(-10%, 0);
-    }
-
-    .badge {
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      border: 2px solid var(--color-aquaSoft);
-      color: var(--color-ink);
-      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 0 12px;
+    }
+
+    .text-empty {
+      /* Пустая ячейка для выравнивания */
+    }
+
+    /* Текст шага */
+    .step-text {
+      max-width: 200px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .step-title {
       font-weight: 600;
-      font-size: 0.75rem;
-      background: rgba(255, 255, 255, 0.9);
-      flex-shrink: 0;
-    }
-
-    .step .copy {
-      flex: 1;
-    }
-
-    .step .t { 
-      font-weight: 600; 
-      margin-top: 2px; 
       font-size: 0.875rem;
       color: var(--color-ink);
-      line-height: 1.4;
+      margin: 0 auto 6px;
+      line-height: 1.3;
+      text-align: center;
     }
-    
-    .step .d { 
-      opacity: 0.75; 
-      margin-top: 6px; 
-      line-height: 1.35; 
+
+    .step-desc {
       font-size: 0.75rem;
-      color: var(--color-ink);
+      color: rgba(17, 24, 39, 0.7);
+      line-height: 1.4;
+      text-align: center;
+      margin: 0 auto;
     }
-    
+
     .telegram-link {
-      color: var(--color-aquaSoft);
+      color: #A8CBB7;
       text-decoration: underline;
-      text-decoration-color: var(--color-aquaSoft);
+      text-decoration-color: #A8CBB7;
       text-underline-offset: 2px;
       transition: opacity 0.2s;
     }
-    
+
     .telegram-link:hover {
       opacity: 0.7;
     }
 
-    .stepsMobile { 
-      display: none; 
-      max-width: 720px; 
-      margin: 24px auto 0; 
+    /* Ряд с линией и большими кружками */
+    .timeline-row {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      position: relative;
+      height: 60px;
+      align-items: center;
+      padding: 0 20px;
     }
-    
-    .mStep { 
-      display: flex; 
-      gap: 12px; 
-      padding: 14px 0; 
-      border-top: 1px solid rgba(15, 23, 42, 0.08); 
+
+    /* Горизонтальная линия */
+    .timeline-line {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 10px;
+      background-color: #A8CBB7;
+      border-radius: 5px;
+      z-index: 0;
     }
-    
-    .mStep:first-child { 
-      border-top: 0; 
-    }
-    
-    .mStep .badge {
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      border: 2px solid var(--color-aquaSoft);
-      color: var(--color-ink);
+
+    /* Большие кружки с цифрами на линии */
+    .timeline-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid #A8CBB7;
+      background: white;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 600;
-      font-size: 0.75rem;
-      background: white;
-      flex-shrink: 0;
-    }
-    
-    .mStep .t {
-      font-weight: 600;
-      font-size: 0.875rem;
+      font-size: 1.125rem;
       color: var(--color-ink);
-      margin-bottom: 4px;
+      justify-self: center;
+      position: relative;
+      z-index: 1;
     }
-    
-    .mStep .d {
-      opacity: 0.75;
-      font-size: 0.75rem;
-      color: var(--color-ink);
-      line-height: 1.4;
+
+    /* Мобильная версия */
+    .timeline-mobile {
+      display: none;
     }
 
     @media (max-width: 900px) {
-      .snakeWrap { 
-        display: none; 
+      .timeline-grid {
+        display: none;
       }
-      .stepsMobile { 
-        display: block; 
+
+      .timeline-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .mobile-step {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      }
+
+      .mobile-step .step-text {
+        max-width: none;
+      }
+
+      .mobile-step .step-title {
+        font-size: 1rem;
+        margin-bottom: 8px;
+      }
+
+      .mobile-step .step-desc {
+        font-size: 0.875rem;
       }
     }
   </style>
