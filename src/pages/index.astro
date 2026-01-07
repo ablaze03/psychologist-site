@@ -8,6 +8,9 @@ import contentData from '../../content.json';
 import type { ContentData } from '../types';
 
 const content = contentData as ContentData;
+
+// Создаём ссылку на Telegram с prefilled текстом
+const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURIComponent(content.contacts.messageTemplate)}`;
 ---
 
 <Layout content={content}>
@@ -396,7 +399,7 @@ const content = contentData as ContentData;
         
         <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8" id="contacts-cta">
           <a 
-            href={content.contacts.telegramLink}
+            href={telegramLinkWithMessage}
             class="btn-primary"
             target="_blank"
           >

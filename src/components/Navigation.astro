@@ -1,11 +1,16 @@
 ---
 import type { ContentData } from '../types';
+import contentData from '../../content.json';
 
 interface Props {
   navItems: ContentData['navigation']['items'];
 }
 
 const { navItems } = Astro.props;
+const content = contentData as ContentData;
+
+// Создаём ссылку на Telegram с prefilled текстом
+const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURIComponent(content.contacts.messageTemplate)}`;
 ---
 
 <nav class="sticky top-0 z-50 bg-base/90 backdrop-blur-sm border-b border-nimbus/20">
@@ -16,7 +21,7 @@ const { navItems } = Astro.props;
         <span class="absolute -bottom-1 left-0 right-0 h-1 bg-peach rounded-full opacity-60"></span>
       </a>
       <ul class="hidden md:flex items-center space-x-8 flex-1 justify-end">
-        {navItems.filter(item => item.label !== 'Подход').map((item) => (
+        {navItems.filter(item => item.label !== 'Подход' && item.label !== 'Обо мне').map((item) => (
           <li>
             <a 
               href={item.anchor}
@@ -28,7 +33,7 @@ const { navItems } = Astro.props;
         ))}
         <li>
           <a 
-            href="https://t.me/Irina_Spva"
+            href={telegramLinkWithMessage}
             class="btn-primary text-sm px-4 py-2"
             target="_blank"
           >
