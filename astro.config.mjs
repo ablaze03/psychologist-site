@@ -3,8 +3,8 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://ablaze03.github.io',
-  base: '/psychologist-site',
+  site: 'https://spiridonovapsy.ru',
+  base: '/',
   integrations: [tailwind()],
 });
 
