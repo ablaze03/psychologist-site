@@ -201,29 +201,17 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
               
               <div class="space-y-6 mb-8">
                 <p class="text-lg text-ink/80 leading-relaxed">
-                  Я дипломированный психолог с многолетним опытом. Работаю с теми, кто хочет разобраться в себе, найти эмоциональное равновесие и научиться осознанно управлять своей жизнью.
+                  {content.about.description}
                 </p>
                 <p class="text-lg text-ink/80 leading-relaxed">
-                  Моя цель помочь вам услышать себя и увидеть новые возможности для изменений.
+                  {content.about.mainText}
                 </p>
-              </div>
-              
-              <div class="mb-8">
-                <h3 class="text-lg font-medium text-ink mb-4">Опыт:</h3>
-                <ul class="space-y-2 text-ink/80">
-                  <li class="flex items-start">
-                    <span class="text-peach mr-2 mt-1">✔</span>
-                    <span>8+ лет работы в психологическом консультировании</span>
-                  </li>
-                  <li class="flex items-start">
-                    <span class="text-peach mr-2 mt-1">✔</span>
-                    <span>Специализированное образование</span>
-                  </li>
-                  <li class="flex items-start">
-                    <span class="text-peach mr-2 mt-1">✔</span>
-                    <span>Работаю с разными запросами — от тревожности до поиска себя</span>
-                  </li>
-                </ul>
+                <p class="text-lg text-ink/80 leading-relaxed">
+                  {content.about.belief}
+                </p>
+                <p class="text-base text-ink/70 leading-relaxed bg-aquaSoft/20 p-4 rounded-lg">
+                  <span class="font-medium text-ink">Мой подход:</span> {content.about.approach}
+                </p>
               </div>
               
               <div class="space-y-3 pt-6 border-t border-nimbus/30">

@@ -24,11 +24,13 @@ export interface ContentData {
   suitableFor: {
     title: string;
     items: string[];
+    finalNote?: string;
     chips: string[];
   };
   services: {
     title: string;
-    audience: string;
+    audience?: string;
+    finalNote?: string;
     items: Array<{
       title: string;
       description: string;
@@ -55,6 +57,9 @@ export interface ContentData {
   about: {
     title: string;
     description: string;
+    mainText: string;
+    belief: string;
+    approach: string;
     facts: Array<{
       label: string;
       value: string;
