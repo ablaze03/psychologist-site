@@ -67,7 +67,18 @@ export interface ContentData {
   };
   pricing: {
     title: string;
-    items: string[];
+    subtitle: string;
+    formats: Array<{
+      title: string;
+      duration: string;
+      price: string;
+      platform?: string;
+      location?: string;
+      locationNote?: string;
+      cancellation: string;
+      note: string;
+    }>;
+    paymentNote: string;
     microText: string;
   };
   faq: {
