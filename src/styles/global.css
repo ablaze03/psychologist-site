@@ -8,11 +8,13 @@
   --color-ink: #111827;
   --color-lemon: #F5E8A6;
   --color-ice: #D7E7F6;
-  --color-peach: #EAD5C6;
-  --color-aquaSoft: #C7D7C9;
-  --color-brand: #0E7C86;
-  --color-brand-hover: #0a656d;
-  --color-brand-light: rgba(14, 124, 134, 0.1);
+  --color-peach: #E8C4B0;
+  --color-aquaSoft: #6FA884;
+  --color-accent: #D4A5A5;
+  --color-sage: #8FA898;
+  --color-brand: #6FA884;
+  --color-brand-hover: #5A9B7D;
+  --color-brand-light: rgba(111, 168, 132, 0.1);
 }
 
 @layer base {
@@ -28,7 +30,7 @@
 
 @layer components {
   .section {
-    @apply py-12 md:py-16;
+    @apply py-10 md:py-14;
   }
   
   .container-custom {
@@ -37,17 +39,17 @@
   }
   
   .heading-1 {
-    font-size: clamp(2.5rem, 4vw, 4rem);
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
     @apply font-light tracking-tight;
     line-height: 1.1;
   }
   
   .heading-2 {
-    @apply text-3xl md:text-4xl lg:text-5xl font-light tracking-tight;
+    @apply text-3xl md:text-4xl font-light tracking-tight;
   }
   
   .heading-3 {
-    @apply text-2xl md:text-3xl font-light tracking-tight;
+    @apply text-xl md:text-2xl font-light tracking-tight;
   }
   
   .highlight-marker {
@@ -118,23 +120,24 @@
   }
   
   .card {
-    @apply bg-white rounded-2xl p-8 md:p-10 border border-nimbus/40;
-    @apply transition-all duration-300 hover:shadow-lg;
+    @apply bg-white rounded-2xl p-6 md:p-8 border border-nimbus/30;
+    @apply transition-all duration-300;
   }
   
   .card:hover {
-    background-color: var(--color-aquaSoft);
-    background-color: rgba(199, 215, 201, 0.08);
+    @apply shadow-md;
+    border-color: var(--color-aquaSoft);
   }
   
   .card-service {
-    @apply bg-base rounded-2xl p-6 md:p-8;
+    @apply bg-base rounded-2xl p-5 md:p-6;
     border: 1px solid var(--color-aquaSoft);
-    @apply transition-all duration-300 hover:shadow-md;
+    @apply transition-all duration-300;
   }
   
   .card-service:hover {
-    background-color: rgba(199, 215, 201, 0.08);
+    background-color: rgba(111, 168, 132, 0.05);
+    @apply shadow-sm;
   }
   
   .chip {
