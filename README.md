@@ -42,6 +42,12 @@ npm run preview
 
 Все тексты находятся в файле `content.json` в корне папки `site/`. После изменения файла перезапустите dev-сервер.
 
+## Автоматический деплой
+
+Сайт автоматически обновляется при каждом `git push` в ветку `main` через GitHub Actions. Деплой занимает 1-2 минуты.
+
+Проверить статус деплоя: https://github.com/ablaze03/psychologist-site/actions
+
 ## Замена фото в Hero
 
 Сейчас используется placeholder: `public/images/portrait-placeholder.svg`
