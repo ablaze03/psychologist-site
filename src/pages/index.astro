@@ -194,21 +194,21 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
           </div>
           
           <!-- Информация справа -->
-          <div class="order-1 md:order-2 card bg-base/90">
-            <h2 class="heading-2 mb-1 text-ink">
+          <div class="order-1 md:order-2 card bg-base/90 !p-5 md:!p-6">
+            <h2 class="heading-2 mb-0.5 text-ink">
               {content.about.name}
             </h2>
-            <p class="text-lg text-ink/60 mb-5">{content.about.role}</p>
+            <p class="text-lg text-ink/60 mb-4">{content.about.role}</p>
             
-            <p class="text-base text-ink/80 leading-relaxed mb-6">
+            <p class="text-base text-ink/80 leading-relaxed mb-5">
               {content.about.description}
             </p>
             
             <!-- Факты в один столбец -->
-            <div class="space-y-4">
+            <div class="space-y-3">
               {content.about.experience.map((item) => (
                 <div class="border-l-2 border-aquaSoft/30 pl-4">
-                  <p class="font-medium text-ink mb-1">{item.title}</p>
+                  <p class="font-medium text-ink mb-0.5">{item.title}</p>
                   <p class="text-sm text-ink/70 leading-relaxed">{item.description}</p>
                 </div>
               ))}
@@ -217,18 +217,18 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
         </div>
         
         <!-- Как я работаю и Моя философия на всю ширину -->
-        <div class="card bg-base/90">
-          <div class="grid md:grid-cols-2 gap-8">
+        <div class="card bg-base/90 !p-5 md:!p-6">
+          <div class="grid md:grid-cols-2 gap-6">
             <!-- Как я работаю -->
-            <div class="border-l-2 border-aquaSoft/30 pl-5">
-              <p class="font-semibold text-lg text-ink mb-3">{content.about.approach.title}</p>
-              <p class="text-base text-ink/80 leading-relaxed">{content.about.approach.text}</p>
+            <div class="border-l-2 border-aquaSoft/30 pl-4">
+              <p class="font-semibold text-base text-ink mb-2">{content.about.approach.title}</p>
+              <p class="text-sm text-ink/80 leading-relaxed">{content.about.approach.text}</p>
             </div>
             
             <!-- Моя философия -->
-            <div class="border-l-2 border-peach/30 pl-5">
-              <p class="font-semibold text-lg text-ink mb-3">{content.about.philosophy.title}</p>
-              <p class="text-base text-ink/80 leading-relaxed">{content.about.philosophy.text}</p>
+            <div class="border-l-2 border-peach/30 pl-4">
+              <p class="font-semibold text-base text-ink mb-2">{content.about.philosophy.title}</p>
+              <p class="text-sm text-ink/80 leading-relaxed">{content.about.philosophy.text}</p>
             </div>
           </div>
         </div>
