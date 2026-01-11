@@ -9,12 +9,12 @@
   --color-lemon: #F5E8A6;
   --color-ice: #D7E7F6;
   --color-peach: #E8C4B0;
-  --color-aquaSoft: #6FA884;
+  --color-aquaSoft: #C7D7C9;
   --color-accent: #D4A5A5;
   --color-sage: #8FA898;
-  --color-brand: #6FA884;
-  --color-brand-hover: #5A9B7D;
-  --color-brand-light: rgba(111, 168, 132, 0.1);
+  --color-brand: #5A9B7D;
+  --color-brand-hover: #4A8A6D;
+  --color-brand-light: rgba(90, 155, 125, 0.1);
 }
 
 @layer base {

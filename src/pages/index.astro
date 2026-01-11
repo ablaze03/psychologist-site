@@ -27,14 +27,14 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
     <div class="container-custom relative z-10">
       <div class="grid md:grid-cols-2 gap-10 items-center">
         <div class="order-2 md:order-1">
-          <h1 class="heading-1 mb-8 text-ink">
+          <h1 class="heading-1 mb-6 text-ink">
             Психотерапия, в которой можно <HighlightMarker>выдохнуть</HighlightMarker>
           </h1>
-          <p class="hero-subtitle text-ink/80 mb-6 font-light">
+          <p class="hero-subtitle text-ink/80 mb-4 font-light">
             Помогаю разобраться с тревогой, отношениями и самооценкой <HighlightMarker>бережно</HighlightMarker>, <HighlightMarker>в вашем темпе</HighlightMarker>.<br />
             <span class="hero-subtitle-small">Онлайн и очно в г. Москва.</span>
           </p>
-          <p class="hero-subtitle-small text-ink/60 mb-8 leading-relaxed">
+          <p class="hero-subtitle-small text-ink/60 mb-6 leading-relaxed">
             {content.hero.microText}
           </p>
           <div class="flex flex-col sm:flex-row gap-4">
@@ -96,10 +96,10 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
   <section id="suitable-for" class="section bg-ice">
     <div class="container-custom">
       <div class="max-w-4xl mx-auto">
-        <h2 class="heading-2 mb-6 text-ink">
+        <h2 class="heading-2 mb-4 text-ink">
           <HighlightMarker>{content.suitableFor.title}</HighlightMarker>
         </h2>
-        <ul class="space-y-4 mb-6 text-lg md:text-xl text-ink/80 leading-relaxed">
+        <ul class="space-y-3 mb-4 text-lg md:text-xl text-ink/80 leading-relaxed">
           <li class="flex items-start">
             <span class="text-ink/40 mr-3">•</span>
             <span>Мало <span class="underline-green">энергии</span>: даже привычные дела даются тяжелее</span>
@@ -129,7 +129,7 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
             <span>Сейчас <span class="underline-green">непростой период</span> (перемены, разрыв, утрата) и нужна опора</span>
           </li>
         </ul>
-        <p class="text-lg font-medium text-ink mb-8">Вы можете начать терапию с того, в чём сейчас <span class="underline-green">тяжелее всего</span>.</p>
+        <p class="text-lg font-medium text-ink mb-5">Вы можете начать терапию с того, в чём сейчас <span class="underline-green">тяжелее всего</span>.</p>
         <div class="flex flex-wrap gap-3">
           {content.suitableFor.chips.map((chip) => (
             <span class="chip">{chip}</span>
@@ -157,7 +157,7 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
         <h2 class="heading-2 mb-8 text-center text-ink">
           <HighlightMarker>{content.services.title}</HighlightMarker>
         </h2>
-        <div class="grid md:grid-cols-2 gap-6 mb-8">
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
           {content.services.items.map((item) => (
             <div class="card-service">
               <h3 class="text-xl font-medium text-ink mb-2">{item.title}</h3>
@@ -198,9 +198,9 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
             <h2 class="heading-2 mb-0.5 text-ink">
               {content.about.name}
             </h2>
-            <p class="text-lg text-ink/60 mb-4">{content.about.role}</p>
+            <p class="text-lg text-ink/60 mb-3">{content.about.role}</p>
             
-            <p class="text-base text-ink/80 leading-relaxed mb-5">
+            <p class="text-base text-ink/80 leading-relaxed mb-4">
               {content.about.description}
             </p>
             
@@ -235,10 +235,10 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
         
         <!-- Дипломы и сертификаты -->
         <div class="mt-8">
-          <h3 class="heading-3 mb-4 text-center text-ink/80">
+          <h3 class="heading-3 mb-3 text-center text-ink/80">
             Дипломы и сертификаты
           </h3>
-          <p class="text-base text-ink/70 text-center mb-5 max-w-2xl mx-auto">
+          <p class="text-base text-ink/70 text-center mb-4 max-w-2xl mx-auto">
             Профессиональное развитие и обучение — важная часть моей работы. Здесь представлены сертификаты о прохождении курсов, тренингов и программ повышения квалификации, которые помогают мне быть лучшим специалистом для моих клиентов.
           </p>
           <div class="relative certificates-container">
@@ -265,7 +265,7 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
             <div class="overflow-x-auto pb-4 scrollbar-hide certificates-scroll" style="scroll-snap-type: x mandatory; scroll-behavior: smooth;">
               <div class="flex gap-4" style="scroll-snap-align: start;">
               {[
-                '1.jpeg', '2.jpeg', '3.jpeg', '4.jpeg', 
+                '1.jpeg', '3.jpeg', '4.jpeg', 
                 '5.jpeg', '6.jpeg', '7.jpeg', '8.jpeg',
                 '9.jpeg', '10.jpeg', '11.jpeg', '12.jpeg'
               ].map((filename, i) => (
@@ -457,7 +457,7 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
         <div class="grid md:grid-cols-3 gap-6">
           {content.approach.principles.map((principle) => (
             <div class="bg-base/90 rounded-2xl p-6 border border-aquaSoft/30 shadow-sm hover:shadow-md transition-all duration-300">
-              <div class="flex items-start gap-3 mb-4">
+              <div class="flex items-start gap-3 mb-3">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-aquaSoft/30 text-ink border border-aquaSoft/50">
                   {principle.number}
                 </span>
@@ -484,11 +484,11 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
           {content.pricing.subtitle}
         </p>
         
-        <div class="grid md:grid-cols-2 gap-6 mb-8">
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
           {content.pricing.formats.map((format, index) => (
             <div class={`relative bg-gradient-to-br ${index === 0 ? 'from-ice/80 to-ice/40' : 'from-aquaSoft/20 to-ice/40'} rounded-2xl p-6 border-2 ${index === 0 ? 'border-aquaSoft/30' : 'border-aquaSoft/40'} shadow-lg hover:shadow-xl transition-all duration-300 group`}>
               {/* Значок формата */}
-              <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/80 mb-4 group-hover:scale-110 transition-transform">
+              <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/80 mb-3 group-hover:scale-110 transition-transform">
                 {index === 0 ? (
                   <svg class="w-7 h-7 text-aquaSoft" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -504,13 +504,13 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
               <h3 class="text-2xl font-semibold text-ink mb-2">{format.title}</h3>
               
               {/* Цена */}
-              <div class="mb-6">
+              <div class="mb-4">
                 <span class="text-4xl font-bold text-ink">{format.price}</span>
                 <span class="text-ink/60 ml-2">/ {format.duration}</span>
               </div>
               
               {/* Детали */}
-              <div class="space-y-3 mb-4">
+              <div class="space-y-2 mb-3">
                 {/* Продолжительность */}
                 <div class="flex items-start gap-3">
                   <svg class="w-5 h-5 text-aquaSoft flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -569,7 +569,7 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
         </div>
         
         {/* Важная информация */}
-        <div class="bg-peach/20 rounded-xl p-6 mb-6 border border-peach/30">
+        <div class="bg-peach/20 rounded-xl p-6 mb-5 border border-peach/30">
           <div class="flex items-start gap-3">
             <svg class="w-6 h-6 text-peach flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -597,13 +597,13 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
   <section id="contacts" class="section bg-peach">
     <div class="container-custom">
       <div class="max-w-3xl mx-auto text-center">
-        <h2 class="heading-2 mb-6 text-ink">
+        <h2 class="heading-2 mb-4 text-ink">
           <span class="relative inline-block"><span class="absolute bottom-0 left-0 right-0 h-0.5 bg-peach/50 -z-10"></span>{content.contacts.title}</span>
         </h2>
         <p class="text-lg text-ink/80 mb-2 leading-relaxed">
           {content.contacts.description}
         </p>
-        <p class="text-base text-ink/70 mb-8 leading-relaxed">
+        <p class="text-base text-ink/70 mb-6 leading-relaxed">
           {content.contacts.descriptionNote}
         </p>
         
@@ -629,8 +629,8 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
         </p>
         
         <!-- Контакты и соцсети -->
-        <div class="bg-base/50 rounded-2xl p-6 mb-8">
-          <h3 class="text-xl font-medium text-ink mb-6">Связаться со мной</h3>
+        <div class="bg-base/50 rounded-2xl p-6 mb-6">
+          <h3 class="text-xl font-medium text-ink mb-4">Связаться со мной</h3>
           
           <div class="grid sm:grid-cols-2 gap-6 text-left">
             <!-- Телефон -->
