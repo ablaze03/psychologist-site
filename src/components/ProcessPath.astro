@@ -28,10 +28,9 @@ const { process } = Astro.props;
             {process.steps.map((step) => (
               <div class="flex justify-center">
                 <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center text-[#5A9B7D] relative z-10" style="border: 3px solid #5A9B7D;">
-                  {step.icon === 'handshake' && (
+                  {step.icon === 'heart' && (
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h4c.5 0 1 .4 1.2.9l1.3 2.6c.3.6 1 1 1.7 1h1.6c.7 0 1.4-.4 1.7-1l1.3-2.6c.2-.5.7-.9 1.2-.9h4M3 10V8c0-1.1.9-2 2-2h2M3 10v6c0 1.1.9 2 2 2h2m14-8V8c0-1.1-.9-2-2-2h-2m4 4v6c0 1.1-.9 2-2 2h-2" />
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M7 6V5c0-.6.4-1 1-1h8c.6 0 1 .4 1 1v1" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
                   )}
                   {step.icon === 'compass' && (
@@ -73,10 +72,9 @@ const { process } = Astro.props;
           <div class="flex gap-4">
             <div class="flex-shrink-0">
               <div class="w-12 h-12 rounded-full bg-[#5A9B7D]/10 border-2 border-[#5A9B7D] flex items-center justify-center text-[#5A9B7D]">
-                {step.icon === 'handshake' && (
+                {step.icon === 'heart' && (
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h4c.5 0 1 .4 1.2.9l1.3 2.6c.3.6 1 1 1.7 1h1.6c.7 0 1.4-.4 1.7-1l1.3-2.6c.2-.5.7-.9 1.2-.9h4M3 10V8c0-1.1.9-2 2-2h2M3 10v6c0 1.1.9 2 2 2h2m14-8V8c0-1.1-.9-2-2-2h-2m4 4v6c0 1.1-.9 2-2 2h-2" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 6V5c0-.6.4-1 1-1h8c.6 0 1 .4 1 1v1" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 )}
                 {step.icon === 'compass' && (
