@@ -194,10 +194,17 @@
   },
   "contacts": {
     "title": "Записаться",
-    "description": "Первая встреча, знакомство (30 минут, онлайн). К ней не нужно готовиться: мы познакомимся, обсудим ваш запрос и договоримся о дальнейшем плане.",
+    "description": "Первая встреча — знакомство (30 минут, онлайн).",
+    "descriptionNote": "К ней не нужно готовиться: мы познакомимся, обсудим ваш запрос и договоримся о дальнейшем плане.",
     "subtitle": "Для записи напишите в Telegram",
     "phone": "+7 915 236 1856",
     "phoneLink": "tel:+79152361856",
+    "email": "irinapsy@inbox.ru",
+    "emailLink": "mailto:irinapsy@inbox.ru",
+    "instagram": {
+      "username": "@irina.spiridonova.psy",
+      "link": "https://www.instagram.com/irina.spiridonova.psy"
+    },
     "channel": {
       "text": "Telegram-канал",
       "link": "https://t.me/kl_psy_spiridonova"

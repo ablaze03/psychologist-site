@@ -80,9 +80,16 @@ export interface ContentData {
   contacts: {
     title: string;
     description: string;
+    descriptionNote: string;
     subtitle: string;
     phone: string;
     phoneLink: string;
+    email: string;
+    emailLink: string;
+    instagram: {
+      username: string;
+      link: string;
+    };
     channel: {
       text: string;
       link: string;
