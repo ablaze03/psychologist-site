@@ -20,11 +20,14 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
   
   body {
     @apply text-ink antialiased;
     background-color: var(--color-base);
+    overflow-x: hidden;
+    width: 100%;
   }
 }
 
@@ -80,13 +83,20 @@
   }
   
   .btn-primary {
-    @apply inline-flex items-center justify-center px-8 py-4 rounded-xl font-medium transition-all;
+    @apply inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 rounded-xl font-medium transition-all;
     background-color: var(--color-peach);
     color: var(--color-ink);
     border: 1px solid var(--color-nimbus);
-    font-size: 1rem;
-    line-height: 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.4rem;
     @apply shadow-sm hover:shadow-md;
+  }
+  
+  @media (min-width: 768px) {
+    .btn-primary {
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
   }
   
   .btn-primary:hover {

@@ -18,15 +18,15 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
   <Navigation navItems={content.navigation.items} />
   
   <!-- Hero -->
-  <section id="hero" class="section min-h-[75vh] flex items-center bg-base relative overflow-hidden">
+  <section id="hero" class="section min-h-[60vh] md:min-h-[75vh] flex items-center bg-base relative overflow-hidden">
     <!-- Мягкая подсветка за текстом -->
-    <div class="absolute left-0 top-[50%] w-96 h-96 bg-peach/20 rounded-full opacity-40 blur-3xl -z-0 hero-blob-left"></div>
+    <div class="absolute left-0 top-[50%] w-64 h-64 md:w-96 md:h-96 bg-peach/20 rounded-full opacity-40 blur-3xl -z-0 hero-blob-left"></div>
     <!-- Декоративный блоб за фото -->
-    <div class="absolute right-0 top-[50%] w-96 h-96 bg-ice/30 rounded-full opacity-30 blur-3xl -z-0 hero-blob-right"></div>
+    <div class="absolute right-0 top-[50%] w-64 h-64 md:w-96 md:h-96 bg-ice/30 rounded-full opacity-30 blur-3xl -z-0 hero-blob-right"></div>
     
     <div class="container-custom relative z-10">
-      <div class="grid md:grid-cols-2 gap-10 items-center">
-        <div class="order-2 md:order-1">
+      <div class="grid md:grid-cols-2 gap-6 md:gap-10 items-center">
+        <div class="order-1 md:order-1">
           <h1 class="heading-1 mb-6 text-ink">
             Психотерапия, в которой можно <HighlightMarker>выдохнуть</HighlightMarker>
           </h1>
@@ -46,7 +46,7 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
             </a>
           </div>
         </div>
-        <div class="order-1 md:order-2 relative z-10">
+        <div class="order-2 md:order-2 relative z-10">
           <img 
             src="/images/portrait.jpg"
             alt="Спиридонова Ирина — клинический психолог"
@@ -69,7 +69,13 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
     }
     
     .hero-image {
-      max-width: min(28rem, 100%);
+      max-width: min(20rem, 100%);
+    }
+    
+    @media (min-width: 768px) {
+      .hero-image {
+        max-width: min(28rem, 100%);
+      }
     }
     
     @media (min-width: 1280px) {
