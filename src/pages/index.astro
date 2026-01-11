@@ -234,21 +234,9 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
           <div class="overflow-x-auto pb-4 scrollbar-hide" style="scroll-snap-type: x mandatory;">
             <div class="flex gap-4" style="scroll-snap-align: start;">
               {[
-                'IMG_5657.jpeg', 'IMG_5658.jpeg', 'IMG_5659.jpeg', 'IMG_5660.jpeg', 
-                'IMG_5661.jpeg', 'IMG_5662.jpeg', 'IMG_5663.jpeg', 'IMG_5664.jpeg',
-                'IMG_5665.jpeg', 'IMG_5666.jpeg', 'IMG_5667.jpeg', 'IMG_5668.jpeg',
-                'IMG_5669.jpeg', 'IMG_5670.jpeg', 'IMG_5671.jpeg', 'IMG_5672.jpeg',
-                'IMG_5673.jpeg', 'IMG_5674.jpeg', 'IMG_5675.jpeg', 'IMG_5676.jpeg',
-                'IMG_5677.jpeg', 'IMG_5678.jpeg', 'IMG_5679.jpeg', 'IMG_5680.jpeg',
-                'IMG_5681.jpeg', 'IMG_5683.jpeg', 'IMG_5684.jpeg', 'IMG_5685.jpeg',
-                'IMG_5686.jpeg', 'IMG_5687.jpeg', 'IMG_5688.jpeg', 'IMG_5795.jpeg',
-                'IMG_5796.jpeg', 'IMG_5797.jpeg', 'IMG_5798.jpeg', 'IMG_5799.jpeg',
-                'IMG_5800.jpeg', 'IMG_5801.jpeg', 'IMG_5802.jpeg', 'IMG_5803.jpeg',
-                'IMG_5805.jpeg', 'IMG_5806.jpeg', 'IMG_2264.jpeg', 'IMG_2422.jpeg',
-                'IMG_2425.jpeg', 'IMG_2565.jpeg', 'IMG_3365.jpeg', 'IMG_5701.jpeg',
-                'IMG_5715.jpeg', 'IMG_7286.jpeg', 'IMG_8101.jpeg', 'IMG_8511.jpeg',
-                'IMG_8614.jpeg', 'IMG_8617.jpeg', 'IMG_8620.jpeg', 'IMG_8622.jpeg',
-                'IMG_8624.jpeg'
+                '1.jpeg', '2.jpeg', '3.jpeg', '4.jpeg', 
+                '5.jpeg', '6.jpeg', '7.jpeg', '8.jpeg',
+                '9.jpeg', '10.jpeg', '11.jpeg', '12.jpeg'
               ].map((filename, i) => (
                 <div 
                   class="flex-shrink-0 w-48 aspect-[3/4] bg-base/60 rounded-xl border border-nimbus/40 cursor-pointer transition-all hover:scale-[1.08] hover:shadow-lg certificate-item overflow-hidden"
@@ -263,6 +251,20 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
                   />
                 </div>
               ))}
+              <!-- Кнопка "Посмотреть все" -->
+              <a 
+                href="/certificates"
+                class="flex-shrink-0 w-48 aspect-[3/4] bg-aquaSoft/30 rounded-xl border-2 border-dashed border-aquaSoft hover:bg-aquaSoft/50 transition-all flex flex-col items-center justify-center gap-3 group"
+                style="scroll-snap-align: start;"
+              >
+                <svg class="w-12 h-12 text-aquaSoft group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                <div class="text-center px-4">
+                  <p class="text-sm font-medium text-ink">Посмотреть все</p>
+                  <p class="text-xs text-ink/60 mt-1">45+ обучений</p>
+                </div>
+              </a>
             </div>
           </div>
         </div>

@@ -1,0 +1,138 @@
+---
+import Layout from '../layouts/Layout.astro';
+import contentData from '../../content.json';
+import type { ContentData } from '../types';
+
+const content = contentData as ContentData;
+
+// Все сертификаты из папки Other
+const otherCertificates = [
+  'IMG_3365.jpeg', 'IMG_5658.jpeg', 'IMG_5659.jpeg', 'IMG_5660.jpeg',
+  'IMG_5661.jpeg', 'IMG_5662.jpeg', 'IMG_5663.jpeg', 'IMG_5664.jpeg',
+  'IMG_5665.jpeg', 'IMG_5666.jpeg', 'IMG_5667.jpeg', 'IMG_5668.jpeg',
+  'IMG_5669.jpeg', 'IMG_5670.jpeg', 'IMG_5671.jpeg', 'IMG_5672.jpeg',
+  'IMG_5673.jpeg', 'IMG_5674.jpeg', 'IMG_5675.jpeg', 'IMG_5676.jpeg',
+  'IMG_5677.jpeg', 'IMG_5678.jpeg', 'IMG_5679.jpeg', 'IMG_5680.jpeg',
+  'IMG_5681.jpeg', 'IMG_5683.jpeg', 'IMG_5684.jpeg', 'IMG_5685.jpeg',
+  'IMG_5686.jpeg', 'IMG_5687.jpeg', 'IMG_5795.jpeg', 'IMG_5796.jpeg',
+  'IMG_5797.jpeg', 'IMG_5798.jpeg', 'IMG_5799.jpeg', 'IMG_5800.jpeg',
+  'IMG_5801.jpeg', 'IMG_5802.jpeg', 'IMG_5803.jpeg', 'IMG_5805.jpeg',
+  'IMG_5806.jpeg', 'IMG_8614.jpeg', 'IMG_8620.jpeg', 'IMG_8622.jpeg',
+  'IMG_8624.jpeg'
+];
+---
+
+<Layout content={content}>
+  <!-- Header с кнопкой назад -->
+  <section class="bg-base py-6 border-b border-nimbus/20 sticky top-0 z-40">
+    <div class="container-custom">
+      <div class="flex items-center justify-between">
+        <a 
+          href="/#about" 
+          class="inline-flex items-center gap-2 text-ink hover:text-ink/70 transition-colors group"
+        >
+          <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span class="font-medium">На главную</span>
+        </a>
+        <h1 class="text-2xl md:text-3xl font-light text-ink">Все дипломы и сертификаты</h1>
+        <div class="w-24"></div> <!-- Spacer для выравнивания -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Введение -->
+  <section class="section bg-ice">
+    <div class="container-custom">
+      <div class="max-w-3xl mx-auto text-center mb-12">
+        <p class="text-lg text-ink/80 leading-relaxed">
+          Профессиональное развитие и обучение — важная часть моей работы. Здесь представлены сертификаты о прохождении курсов, тренингов и программ повышения квалификации, которые помогают мне быть лучшим специалистом для моих клиентов.
+        </p>
+        <p class="text-base text-ink/60 mt-4">
+          Всего пройдено обучений: <span class="font-semibold text-ink">{otherCertificates.length}</span>
+        </p>
+      </div>
+
+      <!-- Сетка сертификатов -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+        {otherCertificates.map((filename, i) => (
+          <div 
+            class="certificate-item aspect-[3/4] bg-base rounded-xl border border-nimbus/40 overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-xl hover:border-aquaSoft"
+            data-index={i}
+          >
+            <img 
+              src={`/images/certificates/Other/${filename}`}
+              alt={`Сертификат ${i + 1}`}
+              class="certificate-image w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+        ))}
+      </div>
+
+      <!-- Кнопка назад внизу -->
+      <div class="text-center mt-12">
+        <a 
+          href="/#about" 
+          class="btn-primary inline-flex items-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span>Вернуться на главную</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="fixed inset-0 bg-ink/90 z-50 hidden items-center justify-center p-4">
+    <button id="lightbox-close" class="absolute top-4 right-4 text-base text-white hover:text-peach transition-colors" aria-label="Закрыть">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <img id="lightbox-image" src="" alt="Сертификат" class="max-w-full max-h-[90vh] rounded-lg object-contain" />
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImage = document.getElementById('lightbox-image');
+      const lightboxClose = document.getElementById('lightbox-close');
+      const certificates = document.querySelectorAll('.certificate-item');
+      
+      certificates.forEach(cert => {
+        cert.addEventListener('click', () => {
+          const img = cert.querySelector('.certificate-image') as HTMLImageElement;
+          const imgSrc = img?.src || '';
+          if (imgSrc && imgSrc !== '') {
+            lightboxImage.src = imgSrc;
+            lightboxImage.alt = img?.alt || 'Сертификат';
+            lightbox.classList.remove('hidden');
+            lightbox.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+          }
+        });
+      });
+      
+      const closeLightbox = () => {
+        lightbox.classList.add('hidden');
+        lightbox.classList.remove('flex');
+        document.body.style.overflow = '';
+      };
+      
+      lightboxClose.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+          closeLightbox();
+        }
+      });
+    });
+  </script>
+</Layout>
