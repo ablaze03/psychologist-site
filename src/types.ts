@@ -38,10 +38,11 @@ export interface ContentData {
   };
   process: {
     title: string;
-    subtitle?: string;
     steps: Array<{
       number: string;
+      icon: string;
       title: string;
+      subtitle: string;
       description: string;
     }>;
   };
