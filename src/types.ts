@@ -120,6 +120,14 @@ export interface ContentData {
   disclaimer: {
     title: string;
     content: string;
+    emergencyServices: {
+      title: string;
+      services: Array<{
+        name: string;
+        phone?: string;
+        website?: string;
+      }>;
+    };
     confidentiality: {
       title: string;
       content: string;
