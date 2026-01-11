@@ -203,8 +203,8 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
               {content.about.description}
             </p>
             
-            <!-- Простой список фактов -->
-            <div class="space-y-5">
+            <!-- Факты в 2 колонки -->
+            <div class="grid sm:grid-cols-2 gap-x-6 gap-y-5 mb-8">
               {content.about.experience.map((item) => (
                 <div class="border-l-2 border-aquaSoft/30 pl-4">
                   <p class="font-medium text-ink mb-1">{item.title}</p>
@@ -213,16 +213,19 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
               ))}
             </div>
             
-            <!-- Как я работаю -->
-            <div class="mt-8 pt-6 border-t border-nimbus/20">
-              <p class="font-medium text-ink mb-2">{content.about.approach.title}</p>
-              <p class="text-sm text-ink/70 leading-relaxed">{content.about.approach.text}</p>
-            </div>
-            
-            <!-- Моя философия -->
-            <div class="mt-6">
-              <p class="font-medium text-ink mb-2">{content.about.philosophy.title}</p>
-              <p class="text-sm text-ink/70 leading-relaxed">{content.about.philosophy.text}</p>
+            <!-- Как я работаю и Моя философия в 2 колонки -->
+            <div class="grid sm:grid-cols-2 gap-6 pt-6 border-t border-nimbus/20">
+              <!-- Как я работаю -->
+              <div>
+                <p class="font-medium text-ink mb-2">{content.about.approach.title}</p>
+                <p class="text-sm text-ink/70 leading-relaxed">{content.about.approach.text}</p>
+              </div>
+              
+              <!-- Моя философия -->
+              <div>
+                <p class="font-medium text-ink mb-2">{content.about.philosophy.title}</p>
+                <p class="text-sm text-ink/70 leading-relaxed">{content.about.philosophy.text}</p>
+              </div>
             </div>
           </div>
         </div>
