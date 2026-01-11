@@ -30,6 +30,19 @@ const { content } = Astro.props;
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={content.meta.ogTitle} />
     <meta name="twitter:description" content={content.meta.ogDescription} />
+    
+    <!-- Яндекс.Метрика -->
+    <!-- ИНСТРУКЦИЯ: После создания счетчика в Яндекс.Метрике, 
+         вставьте сюда код счетчика между этими комментариями -->
+    <!-- Пример:
+    <script type="text/javascript">
+       (function(m,e,t,r,i,k,a){
+          // код от Яндекс.Метрики
+       })(window, document, "script", ...);
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/XXXXXXXX" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    -->
+    <!-- /Яндекс.Метрика -->
   </head>
   <body>
     <slot />
