@@ -234,16 +234,28 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
           <p class="text-base text-ink/70 text-center mb-6 max-w-2xl mx-auto">
             Профессиональное развитие и обучение — важная часть моей работы. Здесь представлены сертификаты о прохождении курсов, тренингов и программ повышения квалификации, которые помогают мне быть лучшим специалистом для моих клиентов.
           </p>
-          <div class="relative">
-            <!-- Стрелка-подсказка для прокрутки -->
-            <div class="scroll-hint absolute right-0 top-1/2 -translate-y-1/2 z-10 pointer-events-none opacity-80">
-              <div class="bg-aquaSoft text-white rounded-full p-2 shadow-lg animate-bounce-x">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </div>
-            <div class="overflow-x-auto pb-4 scrollbar-hide certificates-scroll" style="scroll-snap-type: x mandatory;">
+          <div class="relative certificates-container">
+            <!-- Стрелка влево -->
+            <button 
+              class="scroll-arrow scroll-arrow-left absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-aquaSoft text-ink hover:text-white rounded-full p-3 shadow-lg transition-all duration-300 opacity-0 pointer-events-none"
+              aria-label="Прокрутить влево"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            
+            <!-- Стрелка вправо -->
+            <button 
+              class="scroll-arrow scroll-arrow-right absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-aquaSoft text-ink hover:text-white rounded-full p-3 shadow-lg transition-all duration-300 animate-pulse-slow"
+              aria-label="Прокрутить вправо"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+            
+            <div class="overflow-x-auto pb-4 scrollbar-hide certificates-scroll" style="scroll-snap-type: x mandatory; scroll-behavior: smooth;">
               <div class="flex gap-4" style="scroll-snap-align: start;">
               {[
                 '1.jpeg', '2.jpeg', '3.jpeg', '4.jpeg', 
@@ -286,31 +298,79 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
         <script>
           document.addEventListener('DOMContentLoaded', () => {
             const scrollContainer = document.querySelector('.certificates-scroll');
-            const scrollHint = document.querySelector('.scroll-hint');
+            const leftArrow = document.querySelector('.scroll-arrow-left');
+            const rightArrow = document.querySelector('.scroll-arrow-right');
             
-            if (scrollContainer && scrollHint) {
-              scrollContainer.addEventListener('scroll', () => {
-                if (scrollContainer.scrollLeft > 50) {
-                  scrollHint.style.opacity = '0';
-                  scrollHint.style.transition = 'opacity 0.3s ease';
-                }
-              });
-            }
+            if (!scrollContainer || !leftArrow || !rightArrow) return;
+            
+            // Функция обновления видимости стрелок
+            const updateArrows = () => {
+              const scrollLeft = scrollContainer.scrollLeft;
+              const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+              
+              // Левая стрелка: показывать, если можем прокрутить влево
+              if (scrollLeft > 10) {
+                leftArrow.style.opacity = '1';
+                leftArrow.style.pointerEvents = 'auto';
+              } else {
+                leftArrow.style.opacity = '0';
+                leftArrow.style.pointerEvents = 'none';
+              }
+              
+              // Правая стрелка: показывать, если можем прокрутить вправо
+              if (scrollLeft < maxScroll - 10) {
+                rightArrow.style.opacity = '1';
+                rightArrow.style.pointerEvents = 'auto';
+              } else {
+                rightArrow.style.opacity = '0';
+                rightArrow.style.pointerEvents = 'none';
+              }
+            };
+            
+            // Прокрутка влево
+            leftArrow.addEventListener('click', () => {
+              scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+            });
+            
+            // Прокрутка вправо
+            rightArrow.addEventListener('click', () => {
+              scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+            });
+            
+            // Обновляем стрелки при прокрутке
+            scrollContainer.addEventListener('scroll', updateArrows);
+            
+            // Начальное обновление
+            updateArrows();
           });
         </script>
         
         <style>
-          @keyframes bounce-x {
+          @keyframes pulse-slow {
             0%, 100% {
-              transform: translateX(0);
+              transform: scale(1);
+              box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             }
             50% {
-              transform: translateX(8px);
+              transform: scale(1.05);
+              box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
             }
           }
           
-          .animate-bounce-x {
-            animation: bounce-x 1.5s ease-in-out infinite;
+          .animate-pulse-slow {
+            animation: pulse-slow 2s ease-in-out infinite;
+          }
+          
+          .scroll-arrow {
+            backdrop-filter: blur(8px);
+          }
+          
+          .scroll-arrow:hover {
+            transform: translateY(-50%) scale(1.1);
+          }
+          
+          .scroll-arrow:active {
+            transform: translateY(-50%) scale(0.95);
           }
         </style>
         
