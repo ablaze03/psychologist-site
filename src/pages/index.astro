@@ -204,8 +204,8 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
               {content.about.description}
             </p>
             
-            <!-- Факты в 2 колонки -->
-            <div class="grid sm:grid-cols-2 gap-x-6 gap-y-4">
+            <!-- Факты в один столбец -->
+            <div class="space-y-4">
               {content.about.experience.map((item) => (
                 <div class="border-l-2 border-aquaSoft/30 pl-4">
                   <p class="font-medium text-ink mb-1">{item.title}</p>
