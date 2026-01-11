@@ -182,7 +182,7 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
     <div class="container-custom">
       <div class="max-w-6xl mx-auto">
         <!-- Фото и основная информация -->
-        <div class="grid md:grid-cols-[2fr,3fr] gap-8 md:gap-12 items-start mb-8">
+        <div class="grid md:grid-cols-[2fr,3fr] gap-6 md:gap-10 items-start mb-6">
           <!-- Фото слева -->
           <div class="order-2 md:order-1">
             <img 
@@ -195,17 +195,17 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
           
           <!-- Информация справа -->
           <div class="order-1 md:order-2 card bg-base/90">
-            <h2 class="heading-2 mb-2 text-ink">
+            <h2 class="heading-2 mb-1 text-ink">
               {content.about.name}
             </h2>
-            <p class="text-lg text-ink/60 mb-6">{content.about.role}</p>
+            <p class="text-lg text-ink/60 mb-5">{content.about.role}</p>
             
-            <p class="text-base text-ink/80 leading-relaxed mb-8">
+            <p class="text-base text-ink/80 leading-relaxed mb-6">
               {content.about.description}
             </p>
             
             <!-- Факты в 2 колонки -->
-            <div class="grid sm:grid-cols-2 gap-x-6 gap-y-5">
+            <div class="grid sm:grid-cols-2 gap-x-6 gap-y-4">
               {content.about.experience.map((item) => (
                 <div class="border-l-2 border-aquaSoft/30 pl-4">
                   <p class="font-medium text-ink mb-1">{item.title}</p>
