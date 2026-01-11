@@ -195,32 +195,65 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
           <!-- Карточка справа -->
           <div class="order-1 md:order-2">
             <div class="card bg-base/90">
-              <h2 class="heading-2 mb-4 text-ink relative inline-block pb-2">
-                <span class="relative inline-block"><span class="absolute bottom-0 left-0 w-16 h-0.5 bg-aquaSoft/60 -z-10"></span>{content.about.title}</span>
+              <h2 class="heading-2 mb-2 text-ink">
+                {content.about.name}
               </h2>
+              <p class="text-lg text-ink/60 italic mb-6">{content.about.role}</p>
               
-              <div class="space-y-6 mb-8">
-                <p class="text-lg text-ink/80 leading-relaxed">
-                  {content.about.description}
-                </p>
-                <p class="text-lg text-ink/80 leading-relaxed">
-                  {content.about.mainText}
-                </p>
-                <p class="text-lg text-ink/80 leading-relaxed">
-                  {content.about.belief}
-                </p>
-                <p class="text-base text-ink/70 leading-relaxed bg-aquaSoft/20 p-4 rounded-lg">
-                  <span class="font-medium text-ink">Мой подход:</span> {content.about.approach}
-                </p>
+              <p class="text-lg text-ink/80 leading-relaxed mb-8">
+                {content.about.description}
+              </p>
+              
+              <!-- Профессиональный путь -->
+              <h3 class="text-xl font-semibold text-ink mb-4">Профессиональный путь</h3>
+              <div class="space-y-4 mb-8">
+                {content.about.experience.map((item) => {
+                  const iconMap = {
+                    'briefcase': (
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    ),
+                    'education': (
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                    ),
+                    'heart': (
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                    ),
+                    'star': (
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                      </svg>
+                    )
+                  };
+                  return (
+                    <div class="flex items-start gap-3">
+                      <div class="flex-shrink-0 w-10 h-10 bg-aquaSoft/20 rounded-full flex items-center justify-center text-aquaSoft">
+                        {iconMap[item.icon]}
+                      </div>
+                      <div class="flex-1">
+                        <p class="font-semibold text-ink">{item.title}</p>
+                        <p class="text-sm text-ink/70 leading-relaxed">{item.description}</p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
               
-              <div class="space-y-3 pt-6 border-t border-nimbus/30">
-                {content.about.facts.map((fact) => (
-                  <div class="flex flex-col sm:flex-row sm:items-baseline gap-2 text-sm">
-                    <span class="text-ink/60 font-medium sm:w-48">{fact.label}:</span>
-                    <span class="text-ink/80">{fact.value}</span>
-                  </div>
-                ))}
+              <!-- Как я работаю -->
+              <div class="mb-6 bg-aquaSoft/10 rounded-xl p-5 border border-aquaSoft/20">
+                <h3 class="text-lg font-semibold text-ink mb-2">{content.about.approach.title}</h3>
+                <p class="text-base text-ink/80 leading-relaxed">{content.about.approach.text}</p>
+              </div>
+              
+              <!-- Моя философия -->
+              <div class="bg-peach/10 rounded-xl p-5 border border-peach/20">
+                <h3 class="text-lg font-semibold text-ink mb-2">{content.about.philosophy.title}</h3>
+                <p class="text-base text-ink/80 leading-relaxed">{content.about.philosophy.text}</p>
               </div>
             </div>
           </div>

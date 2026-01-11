@@ -56,14 +56,22 @@ export interface ContentData {
   };
   about: {
     title: string;
+    name: string;
+    role: string;
     description: string;
-    mainText: string;
-    belief: string;
-    approach: string;
-    facts: Array<{
-      label: string;
-      value: string;
+    experience: Array<{
+      icon: string;
+      title: string;
+      description: string;
     }>;
+    approach: {
+      title: string;
+      text: string;
+    };
+    philosophy: {
+      title: string;
+      text: string;
+    };
   };
   pricing: {
     title: string;
