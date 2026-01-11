@@ -5,7 +5,23 @@ import type { ContentData } from '../types';
 
 const content = contentData as ContentData;
 
-// Все сертификаты из папки Other
+// Основные сертификаты (те, что на главной странице)
+const mainCertificates = [
+  { filename: '1.jpeg', folder: '' },
+  { filename: '2.jpeg', folder: '' },
+  { filename: '3.jpeg', folder: '' },
+  { filename: '4.jpeg', folder: '' },
+  { filename: '5.jpeg', folder: '' },
+  { filename: '6.jpeg', folder: '' },
+  { filename: '7.jpeg', folder: '' },
+  { filename: '8.jpeg', folder: '' },
+  { filename: '9.jpeg', folder: '' },
+  { filename: '10.jpeg', folder: '' },
+  { filename: '11.jpeg', folder: '' },
+  { filename: '12.jpeg', folder: '' }
+];
+
+// Дополнительные сертификаты из папки Other
 const otherCertificates = [
   'IMG_3365.jpeg', 'IMG_5658.jpeg', 'IMG_5659.jpeg', 'IMG_5660.jpeg',
   'IMG_5661.jpeg', 'IMG_5662.jpeg', 'IMG_5663.jpeg', 'IMG_5664.jpeg',
@@ -19,7 +35,11 @@ const otherCertificates = [
   'IMG_5801.jpeg', 'IMG_5802.jpeg', 'IMG_5803.jpeg', 'IMG_5805.jpeg',
   'IMG_5806.jpeg', 'IMG_8614.jpeg', 'IMG_8620.jpeg', 'IMG_8622.jpeg',
   'IMG_8624.jpeg'
-];
+].map(filename => ({ filename, folder: 'Other/' }));
+
+// Объединяем все сертификаты
+const allCertificates = [...mainCertificates, ...otherCertificates];
+const totalCount = allCertificates.length;
 ---
 
 <Layout content={content}>
@@ -47,24 +67,25 @@ const otherCertificates = [
     <div class="container-custom">
       <div class="max-w-3xl mx-auto text-center mb-12">
         <p class="text-lg text-ink/80 leading-relaxed">
-          Профессиональное развитие и обучение — важная часть моей работы. Здесь представлены сертификаты о прохождении курсов, тренингов и программ повышения квалификации, которые помогают мне быть лучшим специалистом для моих клиентов.
+          Профессиональное развитие и обучение — важная часть моей работы. Здесь представлены все сертификаты о прохождении курсов, тренингов и программ повышения квалификации, которые помогают мне быть лучшим специалистом для моих клиентов.
         </p>
         <p class="text-base text-ink/60 mt-4">
-          Всего пройдено обучений: <span class="font-semibold text-ink">{otherCertificates.length}</span>
+          Всего пройдено обучений: <span class="font-semibold text-ink">{totalCount}</span>
         </p>
       </div>
 
       <!-- Сетка сертификатов -->
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-        {otherCertificates.map((filename, i) => (
+        {allCertificates.map((cert, i) => (
           <div 
             class="certificate-item aspect-[3/4] bg-base rounded-xl border border-nimbus/40 overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-xl hover:border-aquaSoft"
             data-index={i}
           >
             <img 
-              src={`/images/certificates/Other/${filename}`}
+              src={`/images/certificates/${cert.folder}${cert.filename}`}
               alt={`Сертификат ${i + 1}`}
               class="certificate-image w-full h-full object-cover"
+              style="object-position: center 25%;"
               loading="lazy"
             />
           </div>
