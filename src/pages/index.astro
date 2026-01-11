@@ -228,11 +228,23 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
         
         <!-- Дипломы и сертификаты -->
         <div class="mt-12">
-          <h3 class="heading-3 mb-6 text-center text-ink/80">
+          <h3 class="heading-3 mb-4 text-center text-ink/80">
             Дипломы и сертификаты
           </h3>
-          <div class="overflow-x-auto pb-4 scrollbar-hide" style="scroll-snap-type: x mandatory;">
-            <div class="flex gap-4" style="scroll-snap-align: start;">
+          <p class="text-base text-ink/70 text-center mb-6 max-w-2xl mx-auto">
+            Профессиональное развитие и обучение — важная часть моей работы. Здесь представлены сертификаты о прохождении курсов, тренингов и программ повышения квалификации, которые помогают мне быть лучшим специалистом для моих клиентов.
+          </p>
+          <div class="relative">
+            <!-- Стрелка-подсказка для прокрутки -->
+            <div class="scroll-hint absolute right-0 top-1/2 -translate-y-1/2 z-10 pointer-events-none opacity-80">
+              <div class="bg-aquaSoft text-white rounded-full p-2 shadow-lg animate-bounce-x">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+            <div class="overflow-x-auto pb-4 scrollbar-hide certificates-scroll" style="scroll-snap-type: x mandatory;">
+              <div class="flex gap-4" style="scroll-snap-align: start;">
               {[
                 '1.jpeg', '2.jpeg', '3.jpeg', '4.jpeg', 
                 '5.jpeg', '6.jpeg', '7.jpeg', '8.jpeg',
@@ -266,9 +278,41 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
                   <p class="text-xs text-ink/60 mt-1">57 обучений</p>
                 </div>
               </a>
+              </div>
             </div>
           </div>
         </div>
+        
+        <script>
+          document.addEventListener('DOMContentLoaded', () => {
+            const scrollContainer = document.querySelector('.certificates-scroll');
+            const scrollHint = document.querySelector('.scroll-hint');
+            
+            if (scrollContainer && scrollHint) {
+              scrollContainer.addEventListener('scroll', () => {
+                if (scrollContainer.scrollLeft > 50) {
+                  scrollHint.style.opacity = '0';
+                  scrollHint.style.transition = 'opacity 0.3s ease';
+                }
+              });
+            }
+          });
+        </script>
+        
+        <style>
+          @keyframes bounce-x {
+            0%, 100% {
+              transform: translateX(0);
+            }
+            50% {
+              transform: translateX(8px);
+            }
+          }
+          
+          .animate-bounce-x {
+            animation: bounce-x 1.5s ease-in-out infinite;
+          }
+        </style>
         
         <!-- Lightbox Modal -->
         <div id="lightbox" class="fixed inset-0 bg-ink/90 z-50 hidden items-center justify-center p-4">
