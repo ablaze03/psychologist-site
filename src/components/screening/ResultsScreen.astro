@@ -1,0 +1,338 @@
+---
+import { uiTexts } from '../../config/uiTexts';
+import ResultChart from './ResultChart.astro';
+
+const { results } = uiTexts;
+---
+
+<div class="screening-results">
+  <div class="results-content">
+    <h2 class="results-title">{results.title}</h2>
+    
+    <!-- График результатов -->
+    <ResultChart />
+
+    <!-- Интерпретация -->
+    <div class="results-interpretation" id="results-interpretation">
+      <!-- Заполняется динамически -->
+    </div>
+
+    <!-- Примечание об основе -->
+    <div class="results-evidence">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM11 15H9V13H11V15ZM11 11H9V5H11V11Z" fill="currentColor"/>
+      </svg>
+      <p>{results.evidence_note}</p>
+    </div>
+
+    <!-- Форма лида -->
+    <div class="results-lead-form">
+      <h3 class="lead-form-title">{results.lead_form_title}</h3>
+      
+      <form id="lead-form" class="lead-form">
+        <div class="form-group">
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            placeholder={uiTexts.lead_form.email_placeholder}
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <input 
+            type="text" 
+            id="telegram" 
+            name="telegram" 
+            placeholder={uiTexts.lead_form.telegram_placeholder}
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-checkbox">
+          <input 
+            type="checkbox" 
+            id="consent" 
+            name="consent" 
+            required
+          />
+          <label for="consent">
+            {uiTexts.lead_form.consent_text}
+          </label>
+        </div>
+
+        <button type="submit" class="btn-primary btn-large">
+          {uiTexts.lead_form.submit_button}
+        </button>
+      </form>
+
+      <div class="form-success" id="form-success" style="display: none;">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="24" fill="#10b981"/>
+          <path d="M20 24L22 26L28 20" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h4>Спасибо!</h4>
+        <p>Расшифровка результатов отправлена. Ожидайте письмо или сообщение.</p>
+      </div>
+    </div>
+
+    <!-- CTA кнопки -->
+    <div class="results-actions">
+      <a href="https://t.me/spiridonova_psy" class="btn-primary" target="_blank" rel="noopener">
+        {results.cta_book}
+      </a>
+      <button class="btn-secondary" id="restart-btn">
+        Пройти ещё раз
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .screening-results {
+    min-height: 100vh;
+    padding: 3rem 1rem;
+  }
+
+  .results-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .results-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .results-interpretation {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-light);
+  }
+
+  .interpretation-section {
+    margin-bottom: 2rem;
+  }
+
+  .interpretation-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .interpretation-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .interpretation-summary {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .interpretation-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .interpretation-list li {
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .interpretation-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent-primary);
+    font-weight: 600;
+  }
+
+  .results-evidence {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .results-evidence svg {
+    flex-shrink: 0;
+    color: var(--accent-primary);
+    margin-top: 0.125rem;
+  }
+
+  .results-evidence p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .results-lead-form {
+    background: linear-gradient(135deg, var(--accent-light), var(--bg-secondary));
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .lead-form-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .lead-form {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--border-light);
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+    background: white;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+  }
+
+  .form-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-checkbox input[type="checkbox"] {
+    margin-top: 0.25rem;
+    flex-shrink: 0;
+  }
+
+  .form-checkbox label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    cursor: pointer;
+  }
+
+  .form-success {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .form-success svg {
+    margin: 0 auto 1rem;
+  }
+
+  .form-success h4 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .form-success p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .results-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-large {
+    width: 100%;
+  }
+
+  .btn-secondary {
+    background: white;
+    color: var(--text-primary);
+    border: 2px solid var(--border-light);
+    border-radius: 12px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent-primary);
+    background: var(--bg-secondary);
+  }
+
+  @media (max-width: 640px) {
+    .results-title {
+      font-size: 1.75rem;
+    }
+
+    .results-interpretation,
+    .results-lead-form {
+      padding: 1.5rem;
+    }
+
+    .lead-form-title {
+      font-size: 1.25rem;
+    }
+
+    .results-actions {
+      flex-direction: column;
+    }
+
+    .results-actions .btn-primary,
+    .results-actions .btn-secondary {
+      width: 100%;
+    }
+  }
+</style>

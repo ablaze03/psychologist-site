@@ -1,0 +1,111 @@
+---
+import { uiTexts } from '../../config/uiTexts';
+import type { TopicType } from '../../types/screening';
+
+const { topic } = uiTexts;
+
+const topics: { value: TopicType; label: string; icon: string }[] = [
+  { value: 'relationships', label: topic.options.relationships, icon: '💬' },
+  { value: 'anxiety', label: topic.options.anxiety, icon: '🌊' },
+  { value: 'work', label: topic.options.work, icon: '💼' },
+  { value: 'other', label: topic.options.other, icon: '🔍' },
+];
+---
+
+<div class="screening-topic">
+  <div class="topic-content">
+    <h2 class="topic-title">{topic.title}</h2>
+    
+    <div class="topic-buttons">
+      {topics.map(t => (
+        <button 
+          class="topic-button" 
+          data-topic={t.value}
+        >
+          <span class="topic-icon">{t.icon}</span>
+          <span class="topic-label">{t.label}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .screening-topic {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .topic-content {
+    max-width: 600px;
+    width: 100%;
+  }
+
+  .topic-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .topic-buttons {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .topic-button {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: white;
+    border: 2px solid var(--border-light);
+    border-radius: 12px;
+    padding: 1.5rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+  }
+
+  .topic-button:hover {
+    border-color: var(--accent-primary);
+    background: var(--bg-secondary);
+    transform: translateX(4px);
+  }
+
+  .topic-button:active {
+    transform: translateX(2px);
+  }
+
+  .topic-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+
+  .topic-label {
+    flex: 1;
+  }
+
+  @media (max-width: 640px) {
+    .topic-title {
+      font-size: 1.5rem;
+    }
+
+    .topic-button {
+      padding: 1.25rem;
+      font-size: 1rem;
+    }
+
+    .topic-icon {
+      font-size: 1.75rem;
+    }
+  }
+</style>

@@ -1,0 +1,548 @@
+---
+import SimpleLayout from '../layouts/SimpleLayout.astro';
+
+const title = 'Мини чек-ап состояния | Екатерина Спиридонова';
+const description = 'Профессиональный психологический скрининг-тест.';
+---
+
+<SimpleLayout title={title} description={description}>
+  <main class="screening-container">
+    <!-- Welcome Screen -->
+    <div id="screen-welcome" class="screen active">
+      <div class="screen-content">
+        <h1>Мини чек-ап состояния</h1>
+        <p class="subtitle">Профессиональный скрининг-тест для понимания вашего эмоционального состояния</p>
+        
+        <div class="disclaimer">
+          <p>⚠️ Не является медицинской диагностикой. Помогает сориентироваться и сформулировать запрос.</p>
+        </div>
+
+        <button class="btn-primary" id="btn-start">Начать</button>
+      </div>
+    </div>
+
+    <!-- Topic Screen -->
+    <div id="screen-topic" class="screen">
+      <div class="screen-content">
+        <h2>Что беспокоит больше всего?</h2>
+        
+        <div class="button-grid">
+          <button class="choice-btn" data-topic="relationships">
+            <span class="icon">💬</span>
+            <span>Отношения</span>
+          </button>
+          <button class="choice-btn" data-topic="anxiety">
+            <span class="icon">🌊</span>
+            <span>Тревога и мысли</span>
+          </button>
+          <button class="choice-btn" data-topic="work">
+            <span class="icon">💼</span>
+            <span>Работа и выгорание</span>
+          </button>
+          <button class="choice-btn" data-topic="other">
+            <span class="icon">🔍</span>
+            <span>Другое / сложно понять</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Depth Screen -->
+    <div id="screen-depth" class="screen">
+      <div class="screen-content">
+        <h2>Выберите формат</h2>
+        
+        <div class="button-grid">
+          <button class="choice-btn" data-version="quick">
+            <span class="icon">⚡</span>
+            <div>
+              <div class="choice-title">Быстро</div>
+              <div class="choice-desc">2–3 минуты, основные показатели</div>
+            </div>
+          </button>
+          <button class="choice-btn" data-version="deep">
+            <span class="icon">🔬</span>
+            <div>
+              <div class="choice-title">Глубже</div>
+              <div class="choice-desc">10–12 минут, детальная карта</div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Questions Screen -->
+    <div id="screen-questions" class="screen">
+      <div class="screen-content">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress"></div>
+        </div>
+        <div class="progress-text" id="progress-text">Вопрос 1 из 10</div>
+        
+        <div class="timeframe">За последние 2 недели</div>
+        
+        <h3 id="question-text">Загрузка вопроса...</h3>
+        
+        <div class="answer-grid" id="answers">
+          <!-- Заполняется JS -->
+        </div>
+
+        <div class="nav-buttons">
+          <button class="btn-secondary" id="btn-prev">← Назад</button>
+          <button class="btn-primary" id="btn-next" disabled>Далее →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="screen-results" class="screen">
+      <div class="screen-content">
+        <h2>Ваша карта состояния</h2>
+        
+        <div class="result-card">
+          <h3>Результаты</h3>
+          <div id="results-content">
+            <p>Спасибо за прохождение теста! Ваши результаты обрабатываются...</p>
+          </div>
+        </div>
+
+        <div class="disclaimer">
+          <p>ℹ️ Основано на скрининговых шкалах PHQ-9, GAD-7, PSS-10, WHO-5. Не является диагнозом.</p>
+        </div>
+
+        <div class="actions">
+          <a href="https://t.me/spiridonova_psy" class="btn-primary" target="_blank">Записаться на консультацию</a>
+          <button class="btn-secondary" id="btn-restart">Пройти ещё раз</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</SimpleLayout>
+
+<style>
+  :root {
+    --accent: #7c3aed;
+    --accent-hover: #6d28d9;
+    --text: #1f2937;
+    --text-light: #6b7280;
+    --bg: #ffffff;
+    --bg-light: #f9fafb;
+    --border: #e5e7eb;
+  }
+
+  .screening-container {
+    min-height: 100vh;
+    background: var(--bg);
+    padding: 2rem 1rem;
+  }
+
+  .screen {
+    display: none;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .screen.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .screen-content {
+    text-align: center;
+  }
+
+  h1, h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2rem;
+    line-height: 1.4;
+    text-align: left;
+  }
+
+  .subtitle {
+    font-size: 1.125rem;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+  }
+
+  .disclaimer {
+    background: var(--bg-light);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+    text-align: left;
+  }
+
+  .disclaimer p {
+    margin: 0;
+    color: var(--text-light);
+    font-size: 0.9375rem;
+  }
+
+  .button-grid {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .choice-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+
+  .choice-btn:hover {
+    border-color: var(--accent);
+    background: var(--bg-light);
+    transform: translateX(4px);
+  }
+
+  .choice-btn .icon {
+    font-size: 2rem;
+  }
+
+  .choice-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .choice-desc {
+    font-size: 0.9375rem;
+    color: var(--text-light);
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    background: white;
+    color: var(--text);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: var(--bg-light);
+  }
+
+  .btn-secondary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .progress-bar {
+    height: 8px;
+    background: var(--bg-light);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #a78bfa);
+    transition: width 0.3s;
+    width: 0%;
+  }
+
+  .progress-text {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+  }
+
+  .timeframe {
+    display: inline-block;
+    background: var(--bg-light);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+  }
+
+  .answer-grid {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .answer-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .answer-btn:hover {
+    border-color: var(--accent);
+    background: var(--bg-light);
+  }
+
+  .answer-btn.selected {
+    border-color: var(--accent);
+    background: #f5f3ff;
+  }
+
+  .answer-radio {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    position: relative;
+  }
+
+  .answer-btn.selected .answer-radio {
+    border-color: var(--accent);
+  }
+
+  .answer-btn.selected .answer-radio::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .nav-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+
+  .result-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    text-align: left;
+  }
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 640px) {
+    h1, h2 {
+      font-size: 1.75rem;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+    }
+
+    .nav-buttons {
+      flex-direction: column-reverse;
+    }
+
+    .nav-buttons button {
+      width: 100%;
+    }
+
+    .actions {
+      flex-direction: column;
+    }
+
+    .actions a, .actions button {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  // Простая версия state machine
+  let currentScreen = 'welcome';
+  let topic = '';
+  let version = '';
+  let currentQuestion = 0;
+  let answers: Record<number, number> = {};
+
+  // Простые тестовые вопросы
+  const questions = [
+    'Мало интереса или удовольствия от того, чем занимаетесь?',
+    'Чувствуете подавленность, депрессию или безнадёжность?',
+    'Чувствуете нервозность, тревогу или напряжение?',
+    'Не можете перестать беспокоиться или контролировать беспокойство?',
+    'Чувствовали, что не можете справиться с важными делами?',
+  ];
+
+  const answerLabels = ['Никогда', 'Несколько дней', 'Больше половины дней', 'Почти каждый день'];
+
+  function showScreen(screenName: string) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const screen = document.getElementById(`screen-${screenName}`);
+    if (screen) {
+      screen.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+    currentScreen = screenName;
+  }
+
+  function renderQuestion() {
+    const questionText = document.getElementById('question-text');
+    const answersContainer = document.getElementById('answers');
+    const progress = document.getElementById('progress');
+    const progressText = document.getElementById('progress-text');
+
+    if (questionText) questionText.textContent = questions[currentQuestion];
+    
+    const percent = Math.round(((currentQuestion + 1) / questions.length) * 100);
+    if (progress) progress.style.width = `${percent}%`;
+    if (progressText) progressText.textContent = `Вопрос ${currentQuestion + 1} из ${questions.length}`;
+
+    if (answersContainer) {
+      answersContainer.innerHTML = answerLabels.map((label, i) => `
+        <button class="answer-btn ${answers[currentQuestion] === i ? 'selected' : ''}" data-value="${i}">
+          <div class="answer-radio"></div>
+          <span>${label}</span>
+        </button>
+      `).join('');
+
+      answersContainer.querySelectorAll('.answer-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const value = parseInt((e.currentTarget as HTMLElement).dataset.value || '0');
+          answers[currentQuestion] = value;
+          answersContainer.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('selected'));
+          (e.currentTarget as HTMLElement).classList.add('selected');
+          const nextBtn = document.getElementById('btn-next') as HTMLButtonElement;
+          if (nextBtn) nextBtn.disabled = false;
+        });
+      });
+    }
+
+    const nextBtn = document.getElementById('btn-next') as HTMLButtonElement;
+    if (nextBtn) nextBtn.disabled = answers[currentQuestion] === undefined;
+
+    const prevBtn = document.getElementById('btn-prev') as HTMLButtonElement;
+    if (prevBtn) prevBtn.disabled = currentQuestion === 0;
+  }
+
+  // Event listeners
+  document.getElementById('btn-start')?.addEventListener('click', () => showScreen('topic'));
+
+  document.querySelectorAll('[data-topic]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      topic = (e.currentTarget as HTMLElement).dataset.topic || '';
+      showScreen('depth');
+    });
+  });
+
+  document.querySelectorAll('[data-version]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      version = (e.currentTarget as HTMLElement).dataset.version || '';
+      showScreen('questions');
+      renderQuestion();
+    });
+  });
+
+  document.getElementById('btn-next')?.addEventListener('click', () => {
+    if (currentQuestion < questions.length - 1) {
+      currentQuestion++;
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  });
+
+  document.getElementById('btn-prev')?.addEventListener('click', () => {
+    if (currentQuestion > 0) {
+      currentQuestion--;
+      renderQuestion();
+    }
+  });
+
+  document.getElementById('btn-restart')?.addEventListener('click', () => {
+    currentQuestion = 0;
+    answers = {};
+    topic = '';
+    version = '';
+    showScreen('welcome');
+  });
+
+  function showResults() {
+    const resultsContent = document.getElementById('results-content');
+    if (resultsContent) {
+      const sum = Object.values(answers).reduce((a, b) => a + b, 0);
+      const max = Object.keys(answers).length * 3;
+      const percent = Math.round((sum / max) * 100);
+
+      resultsContent.innerHTML = `
+        <div style="margin-bottom: 1.5rem;">
+          <h4 style="margin-bottom: 0.5rem;">Общий показатель: ${percent}%</h4>
+          <p style="color: var(--text-light);">Тема: ${topic}, Версия: ${version}</p>
+        </div>
+        <div style="margin-bottom: 1.5rem;">
+          <strong>Интерпретация:</strong>
+          <p>${percent < 33 ? 'Выраженность симптомов низкая. Состояние в пределах нормы.' : 
+             percent < 66 ? 'Умеренная выраженность симптомов. Рекомендуется консультация специалиста.' :
+             'Высокая выраженность симптомов. Настоятельно рекомендуется обратиться к психологу или психотерапевту.'}</p>
+        </div>
+      `;
+    }
+    showScreen('results');
+  }
+</script>

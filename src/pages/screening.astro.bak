@@ -1,0 +1,380 @@
+---
+import Layout from '../layouts/Layout.astro';
+import WelcomeScreen from '../components/screening/WelcomeScreen.astro';
+import TopicSelectScreen from '../components/screening/TopicSelectScreen.astro';
+import DepthSelectScreen from '../components/screening/DepthSelectScreen.astro';
+import QuestionScreen from '../components/screening/QuestionScreen.astro';
+import SafetyScreen from '../components/screening/SafetyScreen.astro';
+import ResultsScreen from '../components/screening/ResultsScreen.astro';
+
+const title = 'Мини чек-ап состояния | Екатерина Спиридонова';
+const description = 'Профессиональный психологический скрининг-тест. Оцените своё эмоциональное состояние за 2-10 минут. Основано на методиках PHQ-9, GAD-7, PSS-10, WHO-5.';
+---
+
+<Layout title={title} description={description}>
+  <main class="screening-container">
+    <!-- Все экраны, переключаемые через JS -->
+    <div id="screen-welcome" class="screen active">
+      <WelcomeScreen />
+    </div>
+
+    <div id="screen-topic" class="screen">
+      <TopicSelectScreen />
+    </div>
+
+    <div id="screen-depth" class="screen">
+      <DepthSelectScreen />
+    </div>
+
+    <div id="screen-questions" class="screen">
+      <QuestionScreen />
+    </div>
+
+    <div id="screen-safety" class="screen">
+      <SafetyScreen />
+    </div>
+
+    <div id="screen-results" class="screen">
+      <ResultsScreen />
+    </div>
+  </main>
+</Layout>
+
+<style>
+  :root {
+    --accent-primary: #7c3aed;
+    --accent-primary-hover: #6d28d9;
+    --accent-secondary: #a78bfa;
+    --accent-light: #f5f3ff;
+    
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    
+    --border-light: #e5e7eb;
+    
+    --warning-light: #fef3c7;
+    --warning-border: #fbbf24;
+    --warning-color: #f59e0b;
+  }
+
+  .screening-container {
+    min-height: 100vh;
+    background: var(--bg-primary);
+  }
+
+  .screen {
+    display: none;
+  }
+
+  .screen.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Убираем стандартные стили чекбоксов */
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--accent-primary);
+  }
+
+  /* Общие утилиты */
+  * {
+    box-sizing: border-box;
+  }
+</style>
+
+<script>
+  import { TestStateMachine } from '../lib/testStateMachine';
+  import { getScaleDisplayName, getInterpretation } from '../lib/scoring';
+  import { interpretations } from '../config/resultTexts';
+  import { trackEvent } from '../lib/analytics';
+  import { sendLeadWebhook } from '../lib/webhook';
+  import type { ScreenType } from '../lib/testStateMachine';
+  import type { TopicType, VersionType, AnswerValue } from '../types/screening';
+
+  // Инициализация state machine
+  const stateMachine = new TestStateMachine();
+
+  // Подписка на изменения состояния
+  stateMachine.subscribe((state) => {
+    updateUI(state.screen);
+    
+    // Обновление специфичных для экрана элементов
+    if (state.screen === 'questions') {
+      updateQuestionScreen();
+    } else if (state.screen === 'results') {
+      updateResultsScreen();
+    }
+  });
+
+  // Переключение экранов
+  function updateUI(screen: ScreenType) {
+    // Скрываем все экраны
+    document.querySelectorAll('.screen').forEach(el => {
+      el.classList.remove('active');
+    });
+
+    // Показываем нужный экран
+    const screenElement = document.getElementById(`screen-${screen}`);
+    if (screenElement) {
+      screenElement.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+  }
+
+  // ========== WELCOME SCREEN ==========
+  const startBtn = document.getElementById('start-test');
+  startBtn?.addEventListener('click', () => {
+    stateMachine.start();
+  });
+
+  // ========== TOPIC SELECT SCREEN ==========
+  const topicButtons = document.querySelectorAll('[data-topic]');
+  topicButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const topic = (e.currentTarget as HTMLElement).dataset.topic as TopicType;
+      stateMachine.selectTopic(topic);
+    });
+  });
+
+  // ========== DEPTH SELECT SCREEN ==========
+  const depthButtons = document.querySelectorAll('[data-version]');
+  depthButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const version = (e.currentTarget as HTMLElement).dataset.version as VersionType;
+      stateMachine.selectVersion(version);
+    });
+  });
+
+  // ========== QUESTION SCREEN ==========
+  function updateQuestionScreen() {
+    const state = stateMachine.getState();
+    const question = stateMachine.getCurrentQuestion();
+    
+    if (!question) return;
+
+    // Обновить прогресс
+    const progress = stateMachine.getProgress();
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+    const progressPercent = document.getElementById('progress-percent');
+    
+    if (progressFill) progressFill.style.width = `${progress}%`;
+    if (progressText) progressText.textContent = `Вопрос ${state.currentQuestionIndex + 1} из ${state.questions.length}`;
+    if (progressPercent) progressPercent.textContent = `${progress}%`;
+
+    // Обновить текст вопроса
+    const questionText = document.getElementById('question-text');
+    if (questionText) questionText.textContent = question.text;
+
+    // Обновить выбранный ответ
+    const answerButtons = document.querySelectorAll('.answer-button');
+    const currentAnswer = state.session.responses[question.id];
+    
+    answerButtons.forEach(btn => {
+      const value = parseInt((btn as HTMLElement).dataset.value || '0');
+      if (currentAnswer === value) {
+        btn.classList.add('selected');
+      } else {
+        btn.classList.remove('selected');
+      }
+    });
+
+    // Обновить кнопку "Далее"
+    const nextBtn = document.getElementById('next-btn') as HTMLButtonElement;
+    if (nextBtn) {
+      nextBtn.disabled = !stateMachine.isCurrentQuestionAnswered();
+    }
+
+    // Обновить кнопку "Назад"
+    const prevBtn = document.getElementById('prev-btn') as HTMLButtonElement;
+    if (prevBtn) {
+      prevBtn.disabled = state.currentQuestionIndex === 0;
+    }
+  }
+
+  // Обработчики ответов
+  const answerButtons = document.querySelectorAll('.answer-button');
+  answerButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const value = parseInt((e.currentTarget as HTMLElement).dataset.value || '0') as AnswerValue;
+      const question = stateMachine.getCurrentQuestion();
+      
+      if (question) {
+        stateMachine.answerQuestion(question.id, value);
+        
+        // Визуально обновляем выбор
+        answerButtons.forEach(b => b.classList.remove('selected'));
+        (e.currentTarget as HTMLElement).classList.add('selected');
+        
+        // Активируем кнопку "Далее"
+        const nextBtn = document.getElementById('next-btn') as HTMLButtonElement;
+        if (nextBtn) nextBtn.disabled = false;
+      }
+    });
+  });
+
+  // Навигация по вопросам
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn?.addEventListener('click', () => {
+    stateMachine.nextQuestion();
+  });
+
+  const prevBtn = document.getElementById('prev-btn');
+  prevBtn?.addEventListener('click', () => {
+    stateMachine.previousQuestion();
+  });
+
+  // ========== SAFETY SCREEN ==========
+  const continueBtn = document.getElementById('continue-btn');
+  continueBtn?.addEventListener('click', () => {
+    stateMachine.continuFromSafety();
+  });
+
+  // ========== RESULTS SCREEN ==========
+  function updateResultsScreen() {
+    const state = stateMachine.getState();
+    const result = state.session.result;
+    
+    if (!result) return;
+
+    // Отрисовка графика
+    const chartData = result.scores
+      .filter(s => !s.scale.includes('SAFETY'))
+      .map(s => ({
+        label: getScaleDisplayName(s.scale),
+        percent: s.percent,
+        level: s.level
+      }));
+    
+    if ((window as any).renderChart) {
+      (window as any).renderChart(chartData);
+    }
+
+    // Отрисовка интерпретации
+    const interpretationContainer = document.getElementById('results-interpretation');
+    if (interpretationContainer && result.top_concerns.length > 0) {
+      const topConcern = result.top_concerns[0];
+      const interpretation = interpretations.find(
+        i => i.scale === topConcern.scale && 
+             i.level === topConcern.level && 
+             i.version === state.session.version_selected
+      );
+
+      if (interpretation) {
+        interpretationContainer.innerHTML = `
+          <div class="interpretation-section">
+            <h3 class="interpretation-title">${interpretation.title}</h3>
+            <p class="interpretation-summary">${interpretation.summary}</p>
+          </div>
+          
+          ${interpretation.recommendations.length > 0 ? `
+            <div class="interpretation-section">
+              <h4 class="interpretation-title">Что может помочь:</h4>
+              <ul class="interpretation-list">
+                ${interpretation.recommendations.map(r => `<li>${r}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+          
+          ${interpretation.therapy_prompts.length > 0 ? `
+            <div class="interpretation-section">
+              <h4 class="interpretation-title">Что обсудить на сессии:</h4>
+              <ul class="interpretation-list">
+                ${interpretation.therapy_prompts.map(p => `<li>${p}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+        `;
+      }
+    }
+  }
+
+  // Обработка формы лида
+  const leadForm = document.getElementById('lead-form');
+  leadForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target as HTMLFormElement);
+    const email = formData.get('email') as string;
+    const telegram = formData.get('telegram') as string;
+    const consent = formData.get('consent') as string;
+
+    if (!consent) {
+      alert('Необходимо согласие на обработку данных');
+      return;
+    }
+
+    if (!email && !telegram) {
+      alert('Укажите email или Telegram для получения результатов');
+      return;
+    }
+
+    const state = stateMachine.getState();
+    const result = state.session.result;
+
+    if (result) {
+      // Отправляем webhook
+      const success = await sendLeadWebhook({
+        session_id: state.session.session_id,
+        topic: state.session.topic_selected,
+        version: state.session.version_selected,
+        scores: result.scores.reduce((acc, s) => {
+          acc[s.scale] = s.percent;
+          return acc;
+        }, {} as Record<string, number>),
+        top_concerns: result.top_concerns.map(c => getScaleDisplayName(c.scale)),
+        contact_email: email || undefined,
+        contact_telegram: telegram || undefined,
+        raw_answers: state.session.responses
+      });
+
+      trackEvent('lead_submit', state.session.session_id, {
+        topic: state.session.topic_selected,
+        version: state.session.version_selected
+      });
+
+      // Показываем success сообщение
+      const leadFormElement = document.getElementById('lead-form');
+      const successElement = document.getElementById('form-success');
+      
+      if (leadFormElement) leadFormElement.style.display = 'none';
+      if (successElement) successElement.style.display = 'block';
+    }
+  });
+
+  // Кнопка "Пройти ещё раз"
+  const restartBtn = document.getElementById('restart-btn');
+  restartBtn?.addEventListener('click', () => {
+    if (confirm('Вы уверены, что хотите начать заново? Текущие результаты будут потеряны.')) {
+      stateMachine.reset();
+    }
+  });
+
+  // Отслеживание кликов по кнопкам записи
+  document.querySelectorAll('a[href*="t.me"]').forEach(link => {
+    link.addEventListener('click', () => {
+      const state = stateMachine.getState();
+      trackEvent('booking_click', state.session.session_id, {
+        topic: state.session.topic_selected,
+        version: state.session.version_selected
+      });
+    });
+  });
+</script>

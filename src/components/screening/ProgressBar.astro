@@ -1,0 +1,58 @@
+---
+interface Props {
+  current: number;
+  total: number;
+}
+
+const { current, total } = Astro.props;
+const percent = Math.round((current / total) * 100);
+---
+
+<div class="progress-bar-container">
+  <div class="progress-info">
+    <span class="progress-text">Вопрос {current} из {total}</span>
+    <span class="progress-percent">{percent}%</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" style={`width: ${percent}%`}></div>
+  </div>
+</div>
+
+<style>
+  .progress-bar-container {
+    margin-bottom: 2rem;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .progress-text {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .progress-percent {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+  }
+
+  .progress-bar {
+    height: 8px;
+    background: var(--bg-secondary);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+</style>

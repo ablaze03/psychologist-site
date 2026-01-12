@@ -5,6 +5,7 @@ import FAQ from '../components/FAQ.astro';
 import Divider from '../components/Divider.astro';
 import HighlightMarker from '../components/HighlightMarker.astro';
 import ProcessPath from '../components/ProcessPath.astro';
+import ScreeningModal from '../components/ScreeningModal.astro';
 import contentData from '../../content.json';
 import type { ContentData } from '../types';
 
@@ -44,6 +45,22 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
             <a href={content.hero.cta.secondary.link} class="btn-secondary">
               {content.hero.cta.secondary.text}
             </a>
+          </div>
+          
+          <!-- Кнопка открытия теста -->
+          <div class="mt-6 flex items-center gap-3">
+            <button 
+              data-screening-trigger 
+              class="screening-trigger-btn"
+              aria-label="Пройти мини чек-ап состояния"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11l3 3L22 4"></path>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+              </svg>
+              <span>Пройти мини чек-ап состояния</span>
+              <span class="screening-badge">5 мин</span>
+            </button>
           </div>
         </div>
         <div class="order-2 md:order-2 relative z-10">
@@ -771,4 +788,55 @@ const telegramLinkWithMessage = `https://t.me/Irina_Spva?text=${encodeURICompone
       </div>
     </div>
   </footer>
+
+  <!-- Модальное окно с тестом -->
+  <ScreeningModal />
 </Layout>
+
+<style is:global>
+  .screening-trigger-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, #f5f3ff 0%, #faf8ff 100%);
+    border: 2px solid #e9d5ff;
+    border-radius: 16px;
+    color: #7c3aed;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.1);
+  }
+
+  .screening-trigger-btn:hover {
+    background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+    border-color: #c4b5fd;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.2);
+  }
+
+  .screening-trigger-btn svg {
+    flex-shrink: 0;
+  }
+
+  .screening-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: white;
+    border: 1px solid #e9d5ff;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #7c3aed;
+  }
+
+  @media (max-width: 640px) {
+    .screening-trigger-btn {
+      width: 100%;
+      justify-content: center;
+      font-size: 0.9375rem;
+    }
+  }
+</style>

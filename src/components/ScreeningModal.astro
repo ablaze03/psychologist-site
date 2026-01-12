@@ -1,0 +1,205 @@
+---
+// Модальное окно с тестом
+---
+
+<div id="screening-modal" class="modal">
+  <div class="modal-overlay"></div>
+  <div class="modal-container">
+    <button class="modal-close" id="modal-close" aria-label="Закрыть">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <div class="modal-content">
+      <!-- Контент теста загружается динамически -->
+      <iframe id="screening-iframe" src="/test" title="Психологический тест"></iframe>
+    </div>
+  </div>
+</div>
+
+<style>
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .modal.active {
+    display: flex;
+  }
+
+  .modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal-container {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    height: 90vh;
+    max-height: 900px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    margin: 2rem;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 44px;
+    height: 44px;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 10;
+    color: #6b7280;
+  }
+
+  .modal-close:hover {
+    background: #f9fafb;
+    border-color: #7c3aed;
+    color: #7c3aed;
+    transform: rotate(90deg);
+  }
+
+  .modal-content {
+    flex: 1;
+    overflow: hidden;
+    border-radius: 24px;
+  }
+
+  #screening-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 24px;
+  }
+
+  /* Mobile адаптация */
+  @media (max-width: 768px) {
+    .modal {
+      padding: 0;
+      align-items: stretch;
+    }
+
+    .modal-container {
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      max-height: none;
+      margin: 0;
+      border-radius: 0;
+    }
+
+    .modal-close {
+      top: 1rem;
+      right: 1rem;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-content {
+      border-radius: 0;
+    }
+
+    #screening-iframe {
+      border-radius: 0;
+    }
+  }
+
+  /* Предотвращаем скролл body когда модалка открыта */
+  body.modal-open {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  // Открытие модалки
+  function openScreeningModal() {
+    const modal = document.getElementById('screening-modal');
+    if (modal) {
+      modal.classList.add('active');
+      document.body.classList.add('modal-open');
+      
+      // Аналитика
+      if ((window as any).ym) {
+        (window as any).ym(106211627, 'reachGoal', 'screening_modal_open');
+      }
+    }
+  }
+
+  // Закрытие модалки
+  function closeScreeningModal() {
+    const modal = document.getElementById('screening-modal');
+    if (modal) {
+      modal.classList.remove('active');
+      document.body.classList.remove('modal-open');
+    }
+  }
+
+  // Event listeners
+  document.addEventListener('DOMContentLoaded', () => {
+    const closeBtn = document.getElementById('modal-close');
+    const overlay = document.querySelector('.modal-overlay');
+    
+    closeBtn?.addEventListener('click', closeScreeningModal);
+    overlay?.addEventListener('click', closeScreeningModal);
+
+    // ESC для закрытия
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeScreeningModal();
+      }
+    });
+
+    // Глобальная функция для открытия
+    (window as any).openScreeningModal = openScreeningModal;
+
+    // Слушаем клики по кнопкам с data-screening-trigger
+    document.querySelectorAll('[data-screening-trigger]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openScreeningModal();
+      });
+    });
+  });
+</script>

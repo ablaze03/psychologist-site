@@ -1,0 +1,1538 @@
+---
+import SimpleLayout from '../layouts/SimpleLayout.astro';
+import { questions, answerLabels, timeframe } from '../screening/config/questions';
+
+const title = 'Профессиональный психологический скрининг | Екатерина Спиридонова';
+const description = 'Оцените своё эмоциональное состояние. Основано на валидных шкалах PHQ-9 и GAD-7.';
+---
+
+<SimpleLayout title={title} description={description}>
+  <main class="screening">
+    <!-- Welcome Screen -->
+    <div id="screen-welcome" class="screen active">
+      <div class="container">
+        <h1>Мини чек-ап эмоционального состояния</h1>
+        <p class="lead">Профессиональный скрининг-тест на основе клинических шкал PHQ-9 и GAD-7</p>
+        
+        <div class="info-card">
+          <div class="info-icon">ℹ️</div>
+          <div>
+            <h3>Что это такое?</h3>
+            <p>Тест поможет оценить выраженность депрессивных и тревожных симптомов за последние 2 недели.</p>
+            <ul>
+              <li>17 вопросов, ~5 минут</li>
+              <li>Основано на шкалах PHQ-9 и GAD-7</li>
+              <li>Результаты с рекомендациями</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="disclaimer">
+          <strong>⚠️ Важно:</strong>
+          <ul>
+            <li>Это НЕ медицинская диагностика</li>
+            <li>Результаты помогают сориентироваться и сформулировать запрос</li>
+            <li>При значительных симптомах рекомендуется консультация специалиста</li>
+            <li>Данные конфиденциальны и не сохраняются на сервере</li>
+          </ul>
+        </div>
+
+        <button class="btn-primary btn-large" id="btn-start">Начать тест</button>
+
+        <div id="resume-block" class="resume-card" style="display: none;">
+          <p>У вас есть незавершённый тест</p>
+          <div class="resume-buttons">
+            <button class="btn-secondary" id="btn-resume">Продолжить</button>
+            <button class="btn-text" id="btn-new">Начать заново</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Questions Screen -->
+    <div id="screen-questions" class="screen">
+      <div class="container">
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+          </div>
+          <div class="progress-text" id="progress-text">Вопрос 1 из 17</div>
+        </div>
+
+        <div class="timeframe">{timeframe}</div>
+        
+        <h2 id="question-text" class="question-title">Загрузка...</h2>
+        
+        <div class="answers" id="answers"></div>
+
+        <div class="nav">
+          <button class="btn-secondary" id="btn-prev" disabled>← Назад</button>
+          <button class="btn-primary" id="btn-next" disabled>Далее →</button>
+        </div>
+
+        <p class="help-text">Отвечайте исходя из того, как вы себя чувствовали за последние 2 недели</p>
+      </div>
+    </div>
+
+    <!-- Safety Screen -->
+    <div id="screen-safety" class="screen">
+      <div class="container">
+        <div class="safety-card">
+          <div class="safety-icon">🤝</div>
+          <h2>Вы не одни</h2>
+          <p class="lead">То, что вы испытываете — это сигнал о том, что сейчас нужна поддержка.</p>
+          
+          <div class="safety-content">
+            <p>Мысли о нежелании жить могут возникать при сильном эмоциональном истощении. <strong>Это не слабость</strong> — это признак того, что нагрузка превысила ресурсы.</p>
+            
+            <div class="safety-actions">
+              <h3>Что важно сделать сейчас:</h3>
+              <ul>
+                <li><strong>Поговорите с близким человеком</strong> о том, что чувствуете</li>
+                <li><strong>Обратитесь к психологу или психотерапевту</strong> в ближайшее время</li>
+                <li><strong>При острых состояниях:</strong> позвоните по телефону экстренной психологической помощи</li>
+              </ul>
+            </div>
+
+            <div class="emergency-contacts">
+              <h4>Экстренная помощь 24/7:</h4>
+              <ul>
+                <li><strong>Экстренная помощь:</strong> <a href="tel:+7495051">+7 495 051</a></li>
+                <li><strong>Неотложная психологическая помощь:</strong> <a href="tel:+74997912050">+7 499 791 20 50</a></li>
+                <li><strong>Экстренная медико-психологическая помощь (Депздрав Москвы):</strong> <a href="tel:+74959895050">+7 495 989 50 50</a> (<a href="https://mosgorzdrav.ru" target="_blank">mosgorzdrav.ru</a>)</li>
+                <li><strong>Психологическая помощь МЧС России:</strong> <a href="https://psi.mchs.gov.ru" target="_blank">psi.mchs.gov.ru</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="safety-buttons">
+            <a href="https://t.me/spiridonova_psy" class="btn-primary" target="_blank">Записаться на консультацию</a>
+            <button class="btn-secondary" id="btn-safety-continue">Продолжить к результатам</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="screen-results" class="screen">
+      <div class="container">
+        <h2>Ваши результаты</h2>
+        <p class="subtitle">Карта эмоционального состояния за последние 2 недели</p>
+
+        <!-- График результатов -->
+        <div class="results-chart" id="results-chart"></div>
+
+        <!-- Интерпретация -->
+        <div id="interpretation-block"></div>
+
+        <!-- Evidence note -->
+        <div class="evidence-note">
+          <p><strong>Методология:</strong> Результаты основаны на клинических шкалах PHQ-9 (Patient Health Questionnaire) и GAD-7 (Generalized Anxiety Disorder). Это валидированные инструменты скрининга, используемые в профессиональной практике.</p>
+          <p><strong>Важно:</strong> Это не диагностика. Результаты показывают выраженность симптомов и помогают сформулировать запрос для консультации.</p>
+        </div>
+
+        <!-- Лид-форма -->
+        <div class="lead-card">
+          <h3>📩 Получить расшифровку результатов</h3>
+          <p style="margin-bottom: 1.5rem;">
+            Оставьте контакт для связи и получите <strong>детальную расшифровку прямо здесь</strong>
+          </p>
+          
+          <form id="lead-form">
+            <div class="contact-method">
+              <label class="method-label">Куда отправить результаты?</label>
+              <div class="method-options">
+                <label class="method-option">
+                  <input type="radio" name="contact_type" value="email" checked />
+                  <span>Email</span>
+                </label>
+                <label class="method-option">
+                  <input type="radio" name="contact_type" value="telegram" />
+                  <span>Telegram</span>
+                </label>
+              </div>
+            </div>
+
+            <div id="contact-input-wrapper">
+              <input type="email" id="contact_value" placeholder="Ваш Email" required />
+            </div>
+
+            <div class="consent">
+              <input type="checkbox" id="consent" name="consent" value="yes" required />
+              <label for="consent">Согласен(а) на обработку данных</label>
+            </div>
+            <button type="submit" class="btn-primary btn-large">Отправить мне результаты</button>
+          </form>
+
+          <div id="form-success" class="success-message" style="display: none;">
+            <div class="success-icon">✓</div>
+            <h4>Готово!</h4>
+            <p id="success-message-text">Результаты отправлены!</p>
+            <div id="telegram-bot-link" style="display: none; margin-top: 1.5rem;">
+              <a href="#" id="bot-link-button" target="_blank" class="btn-primary">
+                📱 Получить результаты в Telegram
+              </a>
+              <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-light);">
+                Нажмите кнопку и напишите боту /start, чтобы получить детальные результаты
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-buttons" id="cta-booking-block">
+          <a href="https://t.me/Irina_Spva" class="btn-primary" target="_blank" id="btn-booking">Записаться на консультацию</a>
+          <button class="btn-secondary" id="btn-restart">Пройти тест заново</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</SimpleLayout>
+
+<style is:global>
+  /* ... существующие стили ... */
+  .contact-method {
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+  .method-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+  }
+  .method-options {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .method-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+  .method-option input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+  }
+  #contact-input-wrapper input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  #contact-input-wrapper input:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+  /* ... существующие стили ... */
+</style>
+
+<style is:global>
+  :root {
+    --primary: #7c3aed;
+    --primary-hover: #6d28d9;
+    --text: #1f2937;
+    --text-light: #6b7280;
+    --bg: #ffffff;
+    --bg-light: #f9fafb;
+    --border: #e5e7eb;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+  }
+
+  .screening {
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    background: 
+      radial-gradient(circle at 20% 30%, rgba(167, 139, 250, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(124, 58, 237, 0.06) 0%, transparent 50%),
+      linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+    background-attachment: fixed;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .screen {
+    display: none;
+  }
+
+  .screen.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .screening h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 1rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--text), #4b5563);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .screening h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  .screening h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1.125rem;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+  }
+
+  /* Info Card */
+  .info-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1.5rem;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s;
+  }
+
+  .info-card:hover {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .info-icon {
+    font-size: 3rem;
+    flex-shrink: 0;
+  }
+
+  .info-card > div {
+    text-align: left;
+  }
+
+  .info-card h3 {
+    text-align: left;
+  }
+
+  .info-card p {
+    text-align: left;
+  }
+
+  .info-card ul {
+    margin-top: 0.75rem;
+    padding-left: 0;
+    color: var(--text-light);
+    text-align: left;
+    list-style: none;
+  }
+
+  .info-card li {
+    margin-bottom: 0.5rem;
+    text-align: left;
+    padding-left: 0;
+  }
+
+  .info-card li::before {
+    content: "•";
+    color: var(--primary);
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-right: 0.5rem;
+  }
+
+  /* Disclaimer */
+  .disclaimer {
+    background: #fef3c7;
+    border: 2px solid #fbbf24;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .disclaimer strong {
+    display: block;
+    margin-bottom: 0.75rem;
+    color: #92400e;
+  }
+
+  .disclaimer ul {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .disclaimer li {
+    margin-bottom: 0.5rem;
+    color: #78350f;
+  }
+
+  /* Resume Card */
+  .resume-card {
+    background: #f0fdf4;
+    border: 2px solid #86efac;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  .resume-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary), #8b5cf6);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.2);
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+  }
+
+  .btn-primary:hover:not(:disabled)::before {
+    transform: translateX(100%);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #6d28d9, #7c3aed);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
+  }
+
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-large {
+    width: 100%;
+    max-width: 400px;
+    font-size: 1.25rem;
+    padding: 1.25rem 2rem;
+  }
+
+  .btn-secondary {
+    background: white;
+    color: var(--text);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    border-color: var(--primary);
+    background: #f5f3ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.1);
+  }
+
+  .btn-secondary:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-text {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+  }
+
+  .btn-text:hover {
+    color: var(--text);
+  }
+
+  /* Progress */
+  .progress-container {
+    margin-bottom: 2rem;
+    background: white;
+    padding: 1.25rem;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  }
+
+  .progress-bar {
+    height: 10px;
+    background: linear-gradient(90deg, #f3f4f6, #e5e7eb);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+    position: relative;
+  }
+
+  .progress-bar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7c3aed, #a78bfa, #c4b5fd);
+    background-size: 200% 100%;
+    animation: gradientMove 3s ease infinite;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+    border-radius: 999px;
+    box-shadow: 0 0 12px rgba(124, 58, 237, 0.4);
+  }
+
+  @keyframes gradientMove {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .progress-text {
+    text-align: center;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  .timeframe {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #fef3c7, #fef08a);
+    padding: 0.625rem 1.25rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #92400e;
+    margin-bottom: 1.5rem;
+    border: 2px solid #fbbf24;
+    box-shadow: 0 2px 8px rgba(251, 191, 36, 0.2);
+  }
+
+  .timeframe::before {
+    content: '⏱️';
+    font-size: 1.125rem;
+  }
+
+  .question-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 2rem;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+
+  /* Answers */
+  .answers {
+    display: grid;
+    gap: 0.875rem;
+    margin-bottom: 2rem;
+  }
+
+  .answer {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 1.125rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .answer:hover:not(.selected) {
+    border-color: #c4b5fd;
+    background: #faf9fc;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+  }
+
+  .answer.selected {
+    background-color: #7c3aed !important; /* Тот самый фиолетовый как у кнопки */
+    border-color: #7c3aed !important;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  }
+
+  .radio {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #d1d5db;
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    background: white;
+  }
+
+  .answer:hover:not(.selected) .radio {
+    border-color: #a78bfa;
+  }
+
+  .answer.selected .radio {
+    border-color: white !important;
+    background: white !important;
+  }
+
+  .answer.selected .radio::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #7c3aed !important;
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .answer-text {
+    flex: 1;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #1f2937;
+    transition: all 0.2s;
+  }
+
+  .answer.selected .answer-text {
+    font-weight: 700 !important;
+    color: white !important; /* Белый текст на фиолетовом фоне */
+  }
+
+  /* Navigation */
+  .nav {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .help-text {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--text-light);
+  }
+
+  /* Safety Screen */
+  .safety-card {
+    background: white;
+    border: 3px solid var(--primary);
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+  }
+
+  .safety-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .safety-content {
+    text-align: left;
+    margin: 2rem 0;
+  }
+
+  .safety-actions {
+    background: var(--bg-light);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .safety-actions ul {
+    margin-top: 1rem;
+    padding-left: 1.5rem;
+  }
+
+  .safety-actions li {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+  }
+
+  .emergency-contacts {
+    background: #fef3c7;
+    border: 2px solid #fbbf24;
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .emergency-contacts h4 {
+    margin-bottom: 1rem;
+    color: #92400e;
+  }
+
+  .emergency-contacts ul {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .emergency-contacts li {
+    margin-bottom: 0.75rem;
+    color: #78350f;
+  }
+
+  .safety-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  /* Results Chart */
+  .results-chart {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .chart-item {
+    margin-bottom: 2rem;
+  }
+
+  .chart-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .chart-label {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .chart-value {
+    font-weight: 700;
+    font-size: 1.125rem;
+  }
+
+  .chart-bar {
+    height: 12px;
+    background: var(--bg-light);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+
+  .chart-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.6s ease;
+  }
+
+  .chart-level {
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Interpretation Block */
+  #interpretation-block {
+    margin-bottom: 2rem;
+  }
+
+  .interpretation-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .interpretation-card h3 {
+    margin-bottom: 1rem;
+  }
+
+  .interpretation-card ul {
+    padding-left: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .interpretation-card li {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+  }
+
+  /* Evidence Note */
+  .evidence-note {
+    background: var(--bg-light);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.9375rem;
+    color: var(--text-light);
+  }
+
+  .evidence-note p {
+    margin-bottom: 0.75rem;
+  }
+
+  .evidence-note p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Lead Card */
+  .lead-card {
+    background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+    border: 2px solid var(--primary);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .lead-card h3 {
+    margin-bottom: 0.75rem;
+  }
+
+  #lead-form {
+    margin-top: 1.5rem;
+  }
+
+  #lead-form input[type="email"] {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  #lead-form input[type="email"]:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+
+  .consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .consent input[type="checkbox"] {
+    margin-top: 0.25rem;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary);
+  }
+
+  .consent label {
+    font-size: 0.9375rem;
+    color: var(--text-light);
+    cursor: pointer;
+  }
+
+  .success-message {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .success-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--success);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+  }
+
+  /* CTA Buttons */
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .screening h1 {
+      font-size: 2rem;
+    }
+
+    .screening h2 {
+      font-size: 1.75rem;
+    }
+
+    .question-title {
+      font-size: 1.5rem;
+    }
+
+    .info-card {
+      flex-direction: column;
+    }
+
+    .nav {
+      flex-direction: column-reverse;
+    }
+
+    .nav button {
+      width: 100%;
+    }
+
+    .safety-card {
+      padding: 2rem 1.5rem;
+    }
+
+    .safety-buttons {
+      flex-direction: column;
+    }
+
+    .cta-buttons {
+      flex-direction: column;
+    }
+
+    .cta-buttons a,
+    .cta-buttons button {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  import { questions, answerLabels } from '../screening/config/questions';
+  import { interpretations } from '../screening/config/interpretations';
+  import { calculateResults, getLevelColor, getLevelLabel } from '../screening/lib/scoring';
+  import { saveProgress, loadProgress, clearProgress, hasProgress } from '../screening/lib/storage';
+  import type { TestResults } from '../screening/lib/scoring';
+
+  // Функция перевода уровней на русский для Telegram
+  function getLevelRu(level: string): string {
+    const levels: Record<string, string> = {
+      minimal: 'минимальный',
+      mild: 'лёгкий',
+      moderate: 'умеренный',
+      severe: 'тяжёлый',
+    };
+    return levels[level] || level;
+  }
+
+  // State
+  let currentQuestionIndex = 0;
+  let answers: Record<string, number> = {};
+  let results: TestResults | null = null;
+
+  // Проверка незавершенной сессии при загрузке
+  document.addEventListener('DOMContentLoaded', () => {
+    if (hasProgress()) {
+      const resumeBlock = document.getElementById('resume-block');
+      if (resumeBlock) resumeBlock.style.display = 'block';
+    }
+  });
+
+  // Показать экран
+  function showScreen(screenId: string) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const screen = document.getElementById(`screen-${screenId}`);
+    if (screen) {
+      screen.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+  }
+
+  // Рендер вопроса
+  function renderQuestion() {
+    const question = questions[currentQuestionIndex];
+    const questionText = document.getElementById('question-text');
+    const answersContainer = document.getElementById('answers');
+    const progress = document.getElementById('progress');
+    const progressText = document.getElementById('progress-text');
+    const btnNext = document.getElementById('btn-next') as HTMLButtonElement;
+    const btnPrev = document.getElementById('btn-prev') as HTMLButtonElement;
+
+    if (questionText) questionText.textContent = question.text;
+
+    const percent = Math.round(((currentQuestionIndex + 1) / questions.length) * 100);
+    if (progress) progress.style.width = `${percent}%`;
+    if (progressText) progressText.textContent = `Вопрос ${currentQuestionIndex + 1} из ${questions.length}`;
+
+    if (answersContainer) {
+      answersContainer.innerHTML = answerLabels.map((label, value) => `
+        <div class="answer ${answers[question.id] === value ? 'selected' : ''}" data-value="${value}">
+          <div class="radio"></div>
+          <div class="answer-text">${label}</div>
+        </div>
+      `).join('');
+
+      answersContainer.querySelectorAll('.answer').forEach(el => {
+        el.addEventListener('click', () => {
+          const value = parseInt(el.getAttribute('data-value') || '0');
+          answers[question.id] = value;
+          renderQuestion();
+          if (btnNext) btnNext.disabled = false;
+
+          // Сохраняем прогресс
+          saveProgress({
+            currentQuestion: currentQuestionIndex,
+            answers,
+            startedAt: Date.now(),
+            lastUpdated: Date.now()
+          });
+        });
+      });
+    }
+
+    if (btnNext) btnNext.disabled = answers[question.id] === undefined;
+    if (btnPrev) btnPrev.disabled = currentQuestionIndex === 0;
+  }
+
+  // Следующий вопрос
+  function nextQuestion() {
+    const question = questions[currentQuestionIndex];
+    
+    // Если это Safety вопрос и ответ > 0
+    if (question.scale === 'SAFETY' && answers[question.id] > 0) {
+      showScreen('safety');
+      return;
+    }
+
+    if (currentQuestionIndex < questions.length - 1) {
+      currentQuestionIndex++;
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  }
+
+  // Предыдущий вопрос
+  function previousQuestion() {
+    if (currentQuestionIndex > 0) {
+      currentQuestionIndex--;
+      renderQuestion();
+    }
+  }
+
+  // Показать результаты
+  function showResults() {
+    results = calculateResults(answers);
+    clearProgress(); // Очищаем сохраненный прогресс
+
+    // Логика скрытия кнопки записи при тяжелых состояниях
+    const bookingBtn = document.getElementById('btn-booking');
+    const phq9Interp = interpretations.PHQ9[results.phq9.level];
+    const gad7Interp = interpretations.GAD7[results.gad7.level];
+    
+    // Проверяем, можно ли показывать кнопку записи (оба интерпретации должны разрешать)
+    const showBooking = (phq9Interp.showBookingButton !== false) && (gad7Interp.showBookingButton !== false);
+    
+    if (bookingBtn) {
+      if (showBooking) {
+        bookingBtn.style.display = 'inline-block';
+      } else {
+        bookingBtn.style.display = 'none';
+      }
+    }
+
+    // Рендерим график
+    const chartContainer = document.getElementById('results-chart');
+    if (chartContainer) {
+      chartContainer.innerHTML = `
+        <h3 style="margin-bottom: 1.5rem;">Выраженность симптомов</h3>
+        ${[results.phq9, results.gad7].map(scale => `
+          <div class="chart-item">
+            <div class="chart-header">
+              <span class="chart-label">${scale.label}</span>
+              <span class="chart-value" style="color: ${getLevelColor(scale.level)}">${scale.score}/${scale.maxScore}</span>
+            </div>
+            <div class="chart-bar">
+              <div class="chart-fill" style="width: ${scale.percent}%; background: ${getLevelColor(scale.level)}"></div>
+            </div>
+            <div class="chart-level" style="color: ${getLevelColor(scale.level)}">${getLevelLabel(scale.level)}</div>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    // Рендерим интерпретацию
+    const interpretationBlock = document.getElementById('interpretation-block');
+    if (interpretationBlock) {
+      let html = '';
+
+      // PHQ-9 интерпретация
+      html += `
+        <div class="interpretation-card">
+          <h3>${phq9Interp.title}</h3>
+          <p>${phq9Interp.description}</p>
+          
+          ${phq9Interp.recommendations.length > 0 ? `
+            <h4 style="margin-top: 1.5rem; margin-bottom: 0.75rem;">Что может помочь:</h4>
+            <ul>
+              ${phq9Interp.recommendations.map(r => `<li>${r}</li>`).join('')}
+            </ul>
+          ` : ''}
+          
+          ${phq9Interp.psychologistNote ? `
+            <div style="margin-top: 1.5rem; padding: 1rem; background: #f3f4f6; border-left: 4px solid #9333ea; border-radius: 4px;">
+              <p style="margin: 0; font-size: 0.95rem; color: #374151;">${phq9Interp.psychologistNote}</p>
+            </div>
+          ` : ''}
+          
+          ${phq9Interp.therapyQuestions.length > 0 ? `
+            <h4 style="margin-top: 1.5rem; margin-bottom: 0.75rem;">Что обсудить с психологом:</h4>
+            <ul>
+              ${phq9Interp.therapyQuestions.map(q => `<li>${q}</li>`).join('')}
+            </ul>
+          ` : ''}
+        </div>
+      `;
+
+      // GAD-7 интерпретация
+      html += `
+        <div class="interpretation-card">
+          <h3>${gad7Interp.title}</h3>
+          <p>${gad7Interp.description}</p>
+          
+          ${gad7Interp.recommendations.length > 0 ? `
+            <h4 style="margin-top: 1.5rem; margin-bottom: 0.75rem;">Что может помочь:</h4>
+            <ul>
+              ${gad7Interp.recommendations.map(r => `<li>${r}</li>`).join('')}
+            </ul>
+          ` : ''}
+          
+          ${gad7Interp.psychologistNote ? `
+            <div style="margin-top: 1.5rem; padding: 1rem; background: #f3f4f6; border-left: 4px solid #9333ea; border-radius: 4px;">
+              <p style="margin: 0; font-size: 0.95rem; color: #374151;">${gad7Interp.psychologistNote}</p>
+            </div>
+          ` : ''}
+          
+          ${gad7Interp.therapyQuestions.length > 0 ? `
+            <h4 style="margin-top: 1.5rem; margin-bottom: 0.75rem;">Что обсудить с психологом:</h4>
+            <ul>
+              ${gad7Interp.therapyQuestions.map(q => `<li>${q}</li>`).join('')}
+            </ul>
+          ` : ''}
+        </div>
+      `;
+
+      // Если оба высокие
+      if (results.phq9.level === 'severe' && results.gad7.level === 'severe') {
+        const combinedInterp = interpretations.combined.bothHigh;
+        html += `
+          <div class="interpretation-card" style="background: #fef3c7; border-color: #fbbf24;">
+            <h3>${combinedInterp.title}</h3>
+            <p>${combinedInterp.description}</p>
+            
+            <h4 style="margin-top: 1.5rem; margin-bottom: 0.75rem;">Рекомендации:</h4>
+            <ul>
+              ${combinedInterp.recommendations.map(r => `<li>${r}</li>`).join('')}
+            </ul>
+            
+            ${combinedInterp.psychologistNote ? `
+              <div style="margin-top: 1.5rem; padding: 1rem; background: #fef9f3; border-left: 4px solid #fb923c; border-radius: 4px;">
+                <p style="margin: 0; font-size: 0.95rem; color: #7c2d12;">${combinedInterp.psychologistNote}</p>
+              </div>
+            ` : ''}
+            
+            ${combinedInterp.therapyQuestions.length > 0 ? `
+              <h4 style="margin-top: 1.5rem; margin-bottom: 0.75rem;">Что обсудить с психологом:</h4>
+              <ul>
+                ${combinedInterp.therapyQuestions.map(q => `<li>${q}</li>`).join('')}
+              </ul>
+            ` : ''}
+          </div>
+        `;
+      }
+
+      interpretationBlock.innerHTML = html;
+    }
+
+    showScreen('results');
+  }
+
+  // Event Listeners
+  document.getElementById('btn-start')?.addEventListener('click', () => {
+    showScreen('questions');
+    renderQuestion();
+  });
+
+  document.getElementById('btn-resume')?.addEventListener('click', () => {
+    const saved = loadProgress();
+    if (saved) {
+      currentQuestionIndex = saved.currentQuestion;
+      answers = saved.answers;
+      showScreen('questions');
+      renderQuestion();
+    }
+  });
+
+  document.getElementById('btn-new')?.addEventListener('click', () => {
+    clearProgress();
+    const resumeBlock = document.getElementById('resume-block');
+    if (resumeBlock) resumeBlock.style.display = 'none';
+  });
+
+  document.getElementById('btn-next')?.addEventListener('click', nextQuestion);
+  document.getElementById('btn-prev')?.addEventListener('click', previousQuestion);
+
+  document.getElementById('btn-safety-continue')?.addEventListener('click', () => {
+    // Продолжаем к следующему вопросу или результатам
+    if (currentQuestionIndex < questions.length - 1) {
+      currentQuestionIndex++;
+      showScreen('questions');
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  });
+
+  document.getElementById('btn-restart')?.addEventListener('click', () => {
+    if (confirm('Начать тест заново? Текущие результаты будут потеряны.')) {
+      currentQuestionIndex = 0;
+      answers = {};
+      results = null;
+      clearProgress();
+      showScreen('welcome');
+    }
+  });
+
+  // Лид-форма
+  const leadForm = document.getElementById('lead-form');
+  const contactInput = document.getElementById('contact_value') as HTMLInputElement;
+  const contactTypes = document.getElementsByName('contact_type');
+
+  contactTypes.forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      const type = (e.target as HTMLInputElement).value;
+      if (type === 'email') {
+        contactInput.type = 'email';
+        contactInput.placeholder = 'Ваш Email';
+      } else {
+        contactInput.type = 'text';
+        contactInput.placeholder = '@username или номер телефона';
+      }
+    });
+  });
+
+  leadForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    console.log('🚀 Форма отправлена!');
+    console.log('📊 Текущие results:', results);
+    
+    const consentCheckbox = document.getElementById('consent') as HTMLInputElement;
+    const contactType = (document.querySelector('input[name="contact_type"]:checked') as HTMLInputElement)?.value;
+    const contactValue = contactInput.value;
+
+    // Проверяем наличие результатов
+    if (!results) {
+      console.error('❌ Результаты не найдены! Пересчитываем...');
+      // Пытаемся пересчитать результаты
+      if (Object.keys(answers).length > 0) {
+        results = calculateResults(answers);
+        console.log('✅ Результаты пересчитаны:', results);
+      } else {
+        alert('Ошибка: результаты теста не найдены. Пожалуйста, пройдите тест заново.');
+        return;
+      }
+    }
+
+    // Проверяем согласие
+    if (!consentCheckbox.checked) {
+      // Подсвечиваем чекбокс
+      const consentDiv = consentCheckbox?.closest('.consent') as HTMLElement;
+      if (consentDiv) {
+        consentDiv.style.border = '2px solid #ef4444';
+        consentDiv.style.padding = '0.75rem';
+        consentDiv.style.borderRadius = '8px';
+        consentDiv.style.backgroundColor = '#fee';
+        setTimeout(() => {
+          consentDiv.style.border = '';
+          consentDiv.style.padding = '';
+          consentDiv.style.borderRadius = '';
+          consentDiv.style.backgroundColor = '';
+        }, 3000);
+      }
+      return;
+    }
+
+    // Блокируем кнопку на время отправки
+    const submitButton = leadForm.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const originalText = submitButton.textContent;
+    submitButton.disabled = true;
+    submitButton.textContent = 'Отправка...';
+
+    try {
+      const TOKEN = '8201502833:AAFdAhwA5XNjmoVSICXTgEYwMFC3PoW2RT0';
+      const PSYCHOLOGIST_CHAT_ID = '269044713'; // Ваш Chat ID
+
+      // 1. Отправляем ВАМ (психологу) уведомление о новом клиенте
+      const messageToYou = `
+🆕 <b>Новый результат теста</b>
+
+👤 <b>Контакт клиента:</b>
+${contactType === 'email' ? '📧' : '📱'} ${contactValue}
+
+📊 <b>Результаты:</b>
+🟦 <b>Депрессия (PHQ-9):</b> ${results?.phq9.score} баллов — ${getLevelRu(results?.phq9.level || 'minimal')}
+🟧 <b>Тревога (GAD-7):</b> ${results?.gad7.score} баллов — ${getLevelRu(results?.gad7.level || 'minimal')}
+
+${results?.safetyTriggered ? '⚠️ <b>ВНИМАНИЕ:</b> Сработал safety-триggер (суицидальные мысли)\n' : ''}
+${(results?.phq9.level === 'severe' || results?.gad7.level === 'severe') ? '🔴 <b>Тяжёлое состояние</b> — рекомендован психотерапевт/психиатр\n' : ''}
+
+<i>Дата: ${new Date().toLocaleString('ru-RU')}</i>
+`;
+
+      const responseToYou = await fetch(
+        `https://api.telegram.org/bot${TOKEN}/sendMessage`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: PSYCHOLOGIST_CHAT_ID,
+            text: messageToYou,
+            parse_mode: 'HTML',
+          }),
+        }
+      );
+
+      const resultToYou = await responseToYou.json();
+      console.log('Отправка психологу:', resultToYou);
+
+      // 2. Отправляем результаты КЛИЕНТУ
+      let clientEmailSent = false;
+      
+      if (contactType === 'email' && contactValue) {
+        // Отправка через EmailJS (бесплатно 200 писем/месяц)
+        // Настройка: https://www.emailjs.com/
+        const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';  // Заменить после регистрации
+        const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID'; // Заменить после регистрации
+        const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID'; // Заменить после регистрации
+        
+        // Проверяем, настроен ли EmailJS
+        if (EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+          try {
+            // Загружаем EmailJS SDK
+            if (!(window as any).emailjs) {
+              const script = document.createElement('script');
+              script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+              document.head.appendChild(script);
+              await new Promise((resolve, reject) => {
+                script.onload = resolve;
+                script.onerror = reject;
+                setTimeout(reject, 5000); // Таймаут 5 сек
+              });
+              (window as any).emailjs.init(EMAILJS_PUBLIC_KEY);
+            }
+            
+            const phq9Interp = interpretations.PHQ9[results?.phq9.level || 'minimal'];
+            const gad7Interp = interpretations.GAD7[results?.gad7.level || 'minimal'];
+            
+            // Отправляем email клиенту
+            await (window as any).emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+              to_email: contactValue,
+              to_name: 'Уважаемый клиент',
+              phq9_score: results?.phq9.score,
+              phq9_level: phq9Interp.title,
+              phq9_description: phq9Interp.description,
+              phq9_recommendations: '• ' + phq9Interp.recommendations.join('\n• '),
+              gad7_score: results?.gad7.score,
+              gad7_level: gad7Interp.title,
+              gad7_description: gad7Interp.description,
+              gad7_recommendations: '• ' + gad7Interp.recommendations.join('\n• '),
+              psychologist_note: phq9Interp.psychologistNote || gad7Interp.psychologistNote || '',
+              date: new Date().toLocaleDateString('ru-RU'),
+            });
+            
+            clientEmailSent = true;
+            console.log('✅ Email отправлен клиенту:', contactValue);
+          } catch (error) {
+            console.error('❌ Ошибка отправки email:', error);
+          }
+        } else {
+          console.log('⚠️ EmailJS не настроен. Настройте ключи в test.astro');
+        }
+      }
+
+      const sendResult = { ok: resultToYou.ok };
+      console.log('Результат отправки:', sendResult);
+
+      if (sendResult.ok) {
+        // Показываем success с детальными результатами ДЛЯ ВСЕХ
+        const form = document.getElementById('lead-form');
+        const success = document.getElementById('form-success');
+        const successText = document.getElementById('success-message-text');
+        
+        // Показываем детальные результаты ПРЯМО НА СТРАНИЦЕ для всех клиентов
+        const phq9Interp = interpretations.PHQ9[results?.phq9.level || 'minimal'];
+        const gad7Interp = interpretations.GAD7[results?.gad7.level || 'minimal'];
+        
+        const detailedResults = `
+          <div style="margin-top: 2rem; padding: 2rem; background: white; border-radius: 12px; border: 2px solid #7c3aed; text-align: left;">
+            <h3 style="margin: 0 0 1.5rem 0; color: #7c3aed;">📊 Ваши детальные результаты</h3>
+            
+            <div style="margin-bottom: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+              <h4 style="margin: 0 0 0.5rem 0;">🟦 Депрессия (PHQ-9): ${results?.phq9.score} баллов</h4>
+              <p style="margin: 0; font-weight: 600;">${phq9Interp.title}</p>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">${phq9Interp.description}</p>
+              ${phq9Interp.recommendations.length > 0 ? `
+                <div style="margin-top: 1rem;">
+                  <strong>Что может помочь:</strong>
+                  <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+                    ${phq9Interp.recommendations.map(r => `<li style="margin: 0.25rem 0;">${r}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+              ${phq9Interp.psychologistNote ? `
+                <div style="margin-top: 1rem; padding: 0.75rem; background: #f3f4f6; border-left: 3px solid #9333ea; font-size: 0.9rem;">
+                  💬 ${phq9Interp.psychologistNote}
+                </div>
+              ` : ''}
+            </div>
+            
+            <div style="margin-bottom: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+              <h4 style="margin: 0 0 0.5rem 0;">🟧 Тревога (GAD-7): ${results?.gad7.score} баллов</h4>
+              <p style="margin: 0; font-weight: 600;">${gad7Interp.title}</p>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">${gad7Interp.description}</p>
+              ${gad7Interp.recommendations.length > 0 ? `
+                <div style="margin-top: 1rem;">
+                  <strong>Что может помочь:</strong>
+                  <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+                    ${gad7Interp.recommendations.map(r => `<li style="margin: 0.25rem 0;">${r}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+              ${gad7Interp.psychologistNote ? `
+                <div style="margin-top: 1rem; padding: 0.75rem; background: #f3f4f6; border-left: 3px solid #9333ea; font-size: 0.9rem;">
+                  💬 ${gad7Interp.psychologistNote}
+                </div>
+              ` : ''}
+            </div>
+            
+            <div style="padding: 1rem; background: #d1fae5; border-radius: 8px; border-left: 4px solid #10b981;">
+              <p style="margin: 0; font-size: 0.875rem;">
+                💾 <strong>Сохраните результаты:</strong> Сделайте скриншот этой страницы, чтобы не потерять рекомендации.
+              </p>
+            </div>
+          </div>
+        `;
+        
+        if (successText) {
+          successText.innerHTML = `✅ <strong>Готово!</strong> Ваш контакт (${contactValue}) получен. Детальные результаты ниже 👇` + detailedResults;
+        }
+        
+        if (form) form.style.display = 'none';
+        if (success) success.style.display = 'block';
+
+        // Отправляем событие в аналитику
+        if ((window as any).ym) {
+          (window as any).ym(106211627, 'reachGoal', 'screening_lead_submit');
+        }
+      } else {
+        // Ошибка отправки
+        console.error('Ошибка отправки:', sendResult);
+        
+        // Показываем красивое сообщение об ошибке
+        const errorMsg = document.createElement('div');
+        errorMsg.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fee; border: 2px solid #ef4444; padding: 2rem; border-radius: 12px; z-index: 10000; max-width: 400px;';
+        errorMsg.innerHTML = `
+          <h3 style="color: #ef4444; margin: 0 0 1rem 0;">Ошибка отправки</h3>
+          <p style="margin: 0 0 1rem 0;">Произошла ошибка при отправке результатов.</p>
+          <p style="margin: 0 0 1.5rem 0; font-size: 0.875rem; color: #666;">Пожалуйста, свяжитесь со мной напрямую через контакты на сайте.</p>
+          <button onclick="this.parentElement.remove()" style="background: #7c3aed; color: white; border: none; padding: 0.5rem 1.5rem; border-radius: 8px; cursor: pointer; font-size: 1rem;">Закрыть</button>
+        `;
+        document.body.appendChild(errorMsg);
+      }
+    } catch (error) {
+      console.error('Ошибка при отправке результатов:', error);
+      alert('Произошла ошибка при отправке. Пожалуйста, свяжитесь со мной напрямую через контакты на сайте.');
+    } finally {
+      // Восстанавливаем кнопку
+      submitButton.disabled = false;
+      submitButton.textContent = originalText;
+    }
+  });
+
+  // Отслеживание кликов по записи
+  document.querySelectorAll('a[href*="t.me"]').forEach(link => {
+    link.addEventListener('click', () => {
+      if ((window as any).ym) {
+        (window as any).ym(106211627, 'reachGoal', 'screening_booking_click');
+      }
+    });
+  });
+</script>
+</SimpleLayout>
